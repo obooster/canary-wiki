@@ -6,7 +6,8 @@ const rarityOrder = {
   UNCOMMON: 2,
   RARE: 3,
   EPIC: 4,
-  LEGENDARY: 5
+  LEGENDARY: 5,
+  SPECIAL: 6
 };
 
 function normalize(str) {

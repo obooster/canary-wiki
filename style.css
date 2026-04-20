@@ -14,6 +14,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 999;
 }
 
 header h1 {
@@ -64,6 +65,7 @@ input {
 .rare { border-left: 4px solid #3b82f6; }
 .epic { border-left: 4px solid purple; }
 .legendary { border-left: 4px solid orange; }
+.special { border-left: 4px solid red; }
 
 /* stats */
 .stats {
