@@ -50,7 +50,7 @@ fetch("https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/sky
             <h3>${highlightedName}</h3>
             <div class="stats">
                 <p>${item.category}</p>
-                <p>💰 ${item.sellPrice.replace("undefined", "-1")}</p>
+                <p>💰 ${item.sellPrice ?? "Sem valor definido"}</p>
                 <p>❤ ${item.baseAttributes?.MAX_HEALTH || 0} | 🛡 ${item.baseAttributes?.DEFENSE || 0}</p>
             </div>
             `;
