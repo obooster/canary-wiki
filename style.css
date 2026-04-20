@@ -1,26 +1,72 @@
 body {
-  background: #121212;
-  color: white;
-  font-family: Arial;
+  margin: 0;
+  background: #0f1115;
+  color: #e5e7eb;
+  font-family: Arial, sans-serif;
 }
 
+/* topo */
+header {
+  position: sticky;
+  top: 0;
+  background: #111827;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+/* search */
+input {
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  background: #1f2937;
+  color: white;
+}
+
+/* grid */
 #container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 200px);
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 15px;
+  padding: 20px;
 }
 
+/* card */
 .card {
-  background: #1e1e1e;
-  padding: 10px;
-  border-radius: 10px;
+  background: #1f2937;
+  border-radius: 12px;
+  padding: 15px;
   transition: 0.2s;
+  cursor: pointer;
+  border: 1px solid #2d3748;
 }
 
 .card:hover {
-  transform: scale(1.05);
+  transform: translateY(-5px);
+  border-color: #3b82f6;
 }
 
-.rare { border-left: 4px solid blue; }
+/* título */
+.card h3 {
+  margin: 0 0 10px;
+}
+
+/* raridade */
+.common { border-left: 4px solid gray; }
+.uncommon { border-left: 4px solid green; }
+.rare { border-left: 4px solid #3b82f6; }
 .epic { border-left: 4px solid purple; }
 .legendary { border-left: 4px solid orange; }
+
+/* stats */
+.stats {
+  font-size: 14px;
+  opacity: 0.8;
+}
