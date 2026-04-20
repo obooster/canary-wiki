@@ -60,11 +60,11 @@ fetch("https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/sky
             const value = normalize(searchInput.value);
 
             const filtered = items.filter(item => {
-                const text = (
+                const text = normalize(
                     (item.displayName || "") + " " +
                     (item.category || "") + " " +
                     (item.rarity || "")
-                ).toLowerCase();
+                );
 
                 return text.includes(value);
             });
