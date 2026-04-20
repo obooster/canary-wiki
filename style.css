@@ -1,0 +1,26 @@
+body {
+  background: #121212;
+  color: white;
+  font-family: Arial;
+}
+
+#container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 200px);
+  gap: 15px;
+}
+
+.card {
+  background: #1e1e1e;
+  padding: 10px;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.rare { border-left: 4px solid blue; }
+.epic { border-left: 4px solid purple; }
+.legendary { border-left: 4px solid orange; }
