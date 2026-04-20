@@ -12,6 +12,14 @@ function escapeRegex(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+function formatPrice(value) {
+  if (value === undefined || value === null) {
+    return "Sem valor definido";
+  }
+
+  return value.toLocaleString("pt-BR");
+}
+
 fetch("https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/items.json")
     .then(res => res.json())
     .then(data => {
@@ -50,7 +58,7 @@ fetch("https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/sky
             <h3>${highlightedName}</h3>
             <div class="stats">
                 <p>${item.category}</p>
-                <p>💰 ${item.sellPrice ?? "Sem valor definido"}</p>
+                <p>💰 ${formatPrice(item.sellPrice)}</p>
                 <p>❤ ${item.baseAttributes?.MAX_HEALTH || 0} | 🛡 ${item.baseAttributes?.DEFENSE || 0}</p>
             </div>
             `;
