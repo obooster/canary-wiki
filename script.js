@@ -28,8 +28,10 @@ fetch("https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/sky
     }
 
     render(items);
+    console.log("itens carregados:", items.length);
 
     searchInput.addEventListener("input", () => {
+        console.log("digitou:", searchInput.value);
       const value = searchInput.value.toLowerCase();
 
       const filtered = items.filter(item =>
