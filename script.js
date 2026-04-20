@@ -1,6 +1,14 @@
 const container = document.getElementById("container");
 const searchInput = document.getElementById("search");
 
+const rarityOrder = {
+  COMMON: 1,
+  UNCOMMON: 2,
+  RARE: 3,
+  EPIC: 4,
+  LEGENDARY: 5
+};
+
 function normalize(str) {
     return str
         .toLowerCase()
@@ -18,6 +26,25 @@ function formatPrice(value) {
   }
 
   return value.toLocaleString("pt-BR");
+}
+
+function sortObjects(list) {
+  return list.sort((a, b) => {
+
+    const rarityA = rarityOrder[a.rarity] || 0;
+    const rarityB = rarityOrder[b.rarity] || 0;
+
+    // 🔥 primeiro: raridade
+    if (rarityA !== rarityB) {
+      return rarityB - rarityA; // maior primeiro
+    }
+
+    // 🔤 segundo: nome
+    const nameA = (a.displayName || "").toLowerCase();
+    const nameB = (b.displayName || "").toLowerCase();
+
+    return nameA.localeCompare(nameB);
+  });
 }
 
 fetch("https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/items.json")
@@ -68,7 +95,7 @@ fetch("https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/sky
         }
         // render
 
-        render(items, "");
+        render(sortObjects(items), "");
         console.log("itens carregados:", items.length);
 
         let timeout;
@@ -89,7 +116,7 @@ fetch("https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/sky
                     return text.includes(value);
                 });
 
-                render(filtered, value);
+                render(sortObjects(filtered), value);
             }, 50)
 
         });
