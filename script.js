@@ -70,7 +70,7 @@ fetch("https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/sky
             });
 
             render(filtered, value);     
-        }, 200)
+        }, 50)
         
     });
 
