@@ -30,15 +30,14 @@ fetch("https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/sky
     render(items);
     console.log("itens carregados:", items.length);
 
-    searchInput.addEventListener("input", () => {
-        console.log("digitou:", searchInput.value);
-      const value = searchInput.value.toLowerCase();
+    searchInput.addEventListener("keyup", () => {
+        const value = searchInput.value.toLowerCase();
 
-      const filtered = items.filter(item =>
-        item.displayName.toLowerCase().includes(value)
-      );
+        const filtered = items.filter(item =>
+            (item.displayName || "").toLowerCase().includes(value)
+        );
 
-      render(filtered);
+        render(filtered);
     });
 
   });
