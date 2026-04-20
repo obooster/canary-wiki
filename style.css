@@ -51,7 +51,7 @@ input {
 
 .card:hover {
   transform: translateY(-5px);
-  border-color: #3b82f6;
+  border-color: #ffffff;
 }
 
 /* título */
