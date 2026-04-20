@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  background: #0f1115;
+  background: #15110f;
   color: #e5e7eb;
   font-family: 'Inter', sans-serif;
 }
@@ -9,7 +9,7 @@ body {
 header {
   position: sticky;
   top: 0;
-  background: #111827;
+  background: #271c11;
   padding: 15px;
   display: flex;
   justify-content: space-between;
@@ -27,7 +27,7 @@ input {
   padding: 8px;
   border-radius: 6px;
   border: none;
-  background: #1f2937;
+  background: #372a1f;
   color: white;
 }
 
@@ -41,12 +41,12 @@ input {
 
 /* card */
 .card {
-  background: #1f2937;
+  background: #372a1f;
   border-radius: 12px;
   padding: 15px;
   transition: 0.2s;
   cursor: pointer;
-  border: 1px solid #2d3748;
+  border: 1px solid #483b2d;
 }
 
 .card:hover {
@@ -74,6 +74,6 @@ input {
 }
 
 .highlight {
-  color: #3b82f6;
+  color: #ffa723;
   font-weight: bold;
 }
