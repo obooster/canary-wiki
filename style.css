@@ -22,6 +22,10 @@ header h1 {
   font-size: 20px;
 }
 
+header img {
+  height: 30px;
+}
+
 /* search */
 input {
   padding: 8px;
