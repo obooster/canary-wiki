@@ -61,7 +61,7 @@ export default function HomePage() {
 
           <div>
             <h1 className="font-pixel text-4xl md:text-5xl lg:text-6xl text-[#FFAA00] leading-tight drop-shadow-[0_2px_8px_#FFAA0044]">
-              RedeCanary
+              Canary
             </h1>
             <p className="font-pixel text-xl md:text-2xl text-white mt-1">Wiki</p>
             <p className="text-[#AAAAAA] mt-3 text-sm md:text-base">

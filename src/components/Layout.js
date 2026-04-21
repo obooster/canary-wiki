@@ -67,7 +67,7 @@ export default function Layout({ children }) {
       >
         <img src={LOGO_URL} alt="RedeCanary" className="w-9 h-9 object-contain" />
         <div>
-          <p className="font-pixel text-[#FFAA00] text-sm leading-tight">RedeCanary</p>
+          <p className="font-pixel text-[#FFAA00] text-sm leading-tight">Canary</p>
           <p className="text-[#777] text-xs">Wiki</p>
         </div>
       </Link>
