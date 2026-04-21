@@ -10,7 +10,7 @@ header {
   position: sticky;
   top: 0;
   background: #271c11;
-  padding: 15px;
+  padding: 10px 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -24,6 +24,7 @@ header h1 {
 
 header img {
   height: 50px;
+  width: auto;
   margin: 0;
   background: transparent
 }
