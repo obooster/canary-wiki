@@ -4,7 +4,7 @@ import { Search, Package, Sparkles, Hammer, BookOpen, Heart, Skull } from 'lucid
 import Layout from '../components/Layout';
 import { RARITY_COLORS, stripMcCodes } from '../utils/minecraft';
 
-const BASE_URL = "https://raw.githubusercontent.com/SEU_USER/SEU_REPO/main";
+const BASE_URL = "https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/";
 
 const CAT_CONFIG = {
   items:        { label: 'Itens',          icon: Package,  color: '#5555FF', path: '/items' },
@@ -72,7 +72,7 @@ export default function SearchPage() {
           entities
         ] = await Promise.all([
           fetch(`${BASE_URL}/items.json`).then(r => r.json()),
-          fetch(`${BASE_URL}/enchantments.json`).then(r => r.json()),
+          fetch(`${BASE_URL}/enchants.json`).then(r => r.json()),
           fetch(`${BASE_URL}/reforges.json`).then(r => r.json()),
           fetch(`${BASE_URL}/collections.json`).then(r => r.json()),
           fetch(`${BASE_URL}/pets.json`).then(r => r.json()),

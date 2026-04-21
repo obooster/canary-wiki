@@ -118,7 +118,9 @@ function ItemModal({ itemKey, item, onClose }) {
                   return (
                     <div key={attr} className="flex items-center justify-between py-1 border-b border-[#2A2A2A]">
                       <span className="text-[#AAAAAA] text-xs">{a ? a.label : attr}</span>
-                      <span className="text-sm font-medium" style={{ color: a?.color || '#55FF55' }}>+{val}</span>
+                      <span className="text-sm font-medium" style={{ color: a?.color || '#55FF55' }}>
+                        {val > 0 ? `+${val}` : val}
+                      </span>
                     </div>
                   );
                 })}
@@ -147,6 +149,7 @@ export default function ItemsPage() {
   const [rarityFilter, setRarityFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [selected, setSelected] = useState(null);
+  const [sortBy, setSortBy] = useState('');
 
   useEffect(() => {
     axios.get(API)
@@ -159,22 +162,53 @@ export default function ItemsPage() {
   const rarities = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY', 'SPECIAL'];
 
   const filtered = useMemo(() => {
-    return Object.entries(items).filter(([, item]) => {
-      const matchSearch = !search || item.displayName?.toLowerCase().includes(search.toLowerCase());
-      const matchRarity = !rarityFilter || item.rarity === rarityFilter;
-      const matchCat = !categoryFilter || item.category === categoryFilter;
-      return matchSearch && matchRarity && matchCat;
-    }).sort((a, b) => {
-      const itemA = a[1];
-      const itemB = b[1];
+    return Object.entries(items)
+      .filter(([, item]) => {
+        const matchSearch =
+          !search ||
+          item.displayName?.toLowerCase().includes(search.toLowerCase());
 
-      const rarityA = RARITY_ORDER[itemA.rarity] ?? 0;
-      const rarityB = RARITY_ORDER[itemB.rarity] ?? 0;
+        const matchRarity =
+          !rarityFilter || item.rarity === rarityFilter;
 
-      // maior raridade primeiro
-      return rarityB - rarityA;
-    });
-  }, [items, search, rarityFilter, categoryFilter]);
+        const matchCat =
+          !categoryFilter || item.category === categoryFilter;
+
+        return matchSearch && matchRarity && matchCat;
+      })
+      .sort((a, b) => {
+        const A = a[1];
+        const B = b[1];
+
+        const priceA = A.sellPrice || 0;
+        const priceB = B.sellPrice || 0;
+
+        const rarityA = RARITY_ORDER[A.rarity] ?? 0;
+        const rarityB = RARITY_ORDER[B.rarity] ?? 0;
+
+        // ordenação por preço com remoção de itens sem preço
+        if (sortBy === 'price_asc' || sortBy === 'price_desc') {
+          const aHasPrice = priceA > 0;
+          const bHasPrice = priceB > 0;
+
+          if (!aHasPrice && !bHasPrice) return 0;
+          if (!aHasPrice) return 1;
+          if (!bHasPrice) return -1;
+        }
+
+        switch (sortBy) {
+          case 'price_asc':
+            return priceA - priceB;
+
+          case 'price_desc':
+            return priceB - priceA;
+
+          case 'rarity':
+          default:
+            return rarityB - rarityA;
+        }
+      });
+  }, [items, search, rarityFilter, categoryFilter, sortBy]);
 
   return (
     <Layout>
@@ -196,6 +230,16 @@ export default function ItemsPage() {
             />
             {search && <button onClick={() => setSearch('')}><X size={12} className="text-[#777]" /></button>}
           </div>
+
+          <select
+            value={sortBy}
+            onChange={e => setSortBy(e.target.value)}
+            className="bg-[#1E1E1E] border border-[#333] text-sm px-3 py-2 text-[#AAAAAA] outline-none cursor-pointer hover:border-[#555]"
+          >
+            <option value="rarity">Raridade</option>
+            <option value="price_asc">Preço (menor)</option>
+            <option value="price_desc">Preço (maior)</option>
+          </select>
 
           <select
             value={rarityFilter}
