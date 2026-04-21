@@ -21,7 +21,8 @@ Ele centraliza informações importantes do jogo em uma interface moderna, rápi
 - 📜 Regras completas do servidor
 - 🏆 Tier lists e rankings
 - 🔎 Sistema de busca global
-- 🎨 Interface estilo dark com destaque por raridade
+- 🎨 Interface dark com destaque por raridade
+- 📊 Itens ordenados automaticamente por raridade
 
 ---
 
@@ -32,8 +33,60 @@ Ele centraliza informações importantes do jogo em uma interface moderna, rápi
 - TailwindCSS
 - Lucide Icons
 - Axios
-- JSON como fonte de dados (GitHub raw API)
+- JSON via GitHub Raw API
 
 ---
 
 ## 📦 Estrutura do projeto
+
+  /src  
+  /components      Layout, navbar, sidebar  
+  /pages           Páginas da wiki  
+
+---
+
+## 🧠 Lógica principal
+
+### Itens
+- Carregados via JSON remoto
+- Filtrados por:
+  - Nome
+  - Categoria
+  - Raridade
+- Ordenação padrão:
+  Special → Legendary → Epic → Rare → Uncommon → Common
+
+### Interface
+- Sidebar fixa no desktop
+- Sidebar mobile em drawer
+- Topbar com busca global
+- Cards com modal de detalhes
+
+---
+
+## 🎮 Sistema de raridade
+
+COMMON < UNCOMMON < RARE < EPIC < LEGENDARY < SPECIAL
+
+Cada raridade possui cor própria e impacto visual na UI.
+
+---
+
+## 📡 Fonte de dados
+
+https://raw.githubusercontent.com/RedeCanary/redecanary-requests/
+
+---
+
+## 📌 Observações
+
+- Servidor roda Minecraft Java (SkyBlock custom)
+- Wiki não depende de backend próprio
+- Conteúdo vem de JSON externo
+- Interface totalmente client-side
+
+---
+
+## 🏷️ Licença
+
+Projeto interno da comunidade RedeCanary
