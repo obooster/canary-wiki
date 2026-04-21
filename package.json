@@ -2,7 +2,7 @@
   "name": "redecanary-wiki",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://SEU_USER.github.io/SEU_REPO",
+  "homepage": "https://obooster.github.io/canary-wiki",
   "dependencies": {
     "axios": "^1.15.2",
     "lucide-react": "^0.462.0",
@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.5.0",
-    "gh-pages": "^6.1.1",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.5.10",
     "tailwindcss": "^3.4.19",
     "tailwindcss-animate": "^1.0.7"
@@ -22,8 +22,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "deploy": "gh-pages -d build",
-    "predeploy": "npm run build"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "browserslist": {
     "production": [
