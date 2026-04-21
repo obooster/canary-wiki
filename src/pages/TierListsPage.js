@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Trophy } from 'lucide-react';
 import Layout from '../components/Layout';
+import MaintenancePage from './MaintenancePage';
 
 const TIER_COLORS = {
   S: { bg: '#FF5555', text: '#000', label: 'S' },
@@ -171,6 +172,7 @@ export default function TierListsPage() {
   const [activeTab, setActiveTab] = useState('swords');
   const activeList = TIER_LISTS.find(l => l.id === activeTab);
 
+  return <MaintenancePage/>
   return (
     <Layout>
       <div className="max-w-4xl mx-auto px-4 md:px-8 py-8">
