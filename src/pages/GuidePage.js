@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Map, ChevronRight, Package, Sparkles, Heart, BookOpen } from 'lucide-react';
 import Layout from '../components/Layout';

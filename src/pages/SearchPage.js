@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Search, Package, Sparkles, Hammer, BookOpen, Heart, Skull } from 'lucide-react';
 import Layout from '../components/Layout';
@@ -59,7 +59,6 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [inputVal, setInputVal] = useState(q);
 
-  // 🔥 carrega TODOS os JSONs
   useEffect(() => {
     async function loadAll() {
       try {
@@ -130,7 +129,6 @@ export default function SearchPage() {
     loadAll();
   }, []);
 
-  // 🔍 busca
   useEffect(() => {
     setInputVal(q);
 

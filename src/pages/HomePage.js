@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Search, Package, Sparkles, Hammer, BookOpen, Heart, Skull, Map, ScrollText, Trophy, ExternalLink, ChevronRight } from 'lucide-react';
 import Layout from '../components/Layout';

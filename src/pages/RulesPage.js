@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   ScrollText,
   ChevronDown,
   ChevronUp,
   AlertTriangle,
-  CheckCircle,
   XCircle,
   Shield,
   Ban,

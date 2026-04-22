@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { Search, Hammer, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import Layout from '../components/Layout';
 import { RARITY_COLORS } from '../utils/minecraft';
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { Search, Skull, X, Shield, Swords, Zap } from 'lucide-react';
 import Layout from '../components/Layout';
@@ -72,7 +72,6 @@ function McName({ text }) {
 }
 
 function EntityCard({ entKey, entity }) {
-  const cleanName = stripMcCodes(entity.name);
   const icon = TYPE_ICONS[entity.type] || '👾';
   const isBoss = entity.attributes?.health >= 1000;
 

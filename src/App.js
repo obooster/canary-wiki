@@ -1,32 +1,42 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from 'react-router-dom'
+import { useState } from "react";
+
 import "./App.css";
+
+import SplashScreen from "./SplashScreen";
 
 import HomePage from "./pages/HomePage";
 import ItemsPage from "./pages/ItemsPage";
-import EncantamentosPage from "./pages/EncantamentosPage";
-import ReforjasPage from "./pages/ReforjasPage";
-import ColecoesPage from "./pages/ColecoesPage";
+import EnchantmentsPage from "./pages/EnchantmentsPage";
+import ReforgesPage from "./pages/ReforgesPage";
+import CollectionsPage from "./pages/CollectionsPage";
 import PetsPage from "./pages/PetsPage";
-import EntidadesPage from "./pages/EntidadesPage";
-import GuiaPage from "./pages/GuiaPage";
-import RegrasPage from "./pages/RegrasPage";
+import EntitiesPage from "./pages/EntitiesPage";
+import GuidePage from "./pages/GuidePage";
+import RulesPage from "./pages/RulesPage";
 import TierListsPage from "./pages/TierListsPage";
 import SearchPage from "./pages/SearchPage";
 
 export default function App() {
+  const [loading, setLoading] = useState(true)
+
+  if (loading) {
+    return <SplashScreen onFinish={() => setLoading(false)} />
+  }
+
+  console.log('feito com amor pelo busti')
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/items" element={<ItemsPage />} />
-        <Route path="/enchantments" element={<EncantamentosPage />} />
-        <Route path="/reforges" element={<ReforjasPage />} />
-        <Route path="/collections" element={<ColecoesPage />} />
+        <Route path="/enchantments" element={<EnchantmentsPage />} />
+        <Route path="/reforges" element={<ReforgesPage />} />
+        <Route path="/collections" element={<CollectionsPage />} />
         <Route path="/pets" element={<PetsPage />} />
-        <Route path="/entities" element={<EntidadesPage />} />
-        <Route path="/getting-started" element={<GuiaPage />} />
-        <Route path="/rules" element={<RegrasPage />} />
+        <Route path="/entities" element={<EntitiesPage />} />
+        <Route path="/getting-started" element={<GuidePage />} />
+        <Route path="/rules" element={<RulesPage />} />
         <Route path="/tier-lists" element={<TierListsPage />} />
         <Route path="/search" element={<SearchPage />} />
       </Routes>

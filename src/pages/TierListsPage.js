@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Trophy } from 'lucide-react';
 import Layout from '../components/Layout';
-import MaintenancePage from './MaintenancePage';
 
 const TIER_COLORS = {
   S: { bg: '#FF5555', text: '#000', label: 'S' },
@@ -18,106 +17,63 @@ const TIER_LISTS = [
     title: 'Espadas',
     description: 'Ranking das melhores espadas para early a late game',
     updatedAt: 'Fev 2025',
-    tiers: {
-      S: [
-        { name: 'Espada Lendária do Céu', note: 'Melhor do late game' },
-        { name: 'Espada Crítica', note: 'Excelente para boss' },
-      ],
-      A: [
-        { name: 'Espada de Ametista', note: 'Boa para early late game' },
-        { name: 'Espada Sombria', note: 'Viável no mid game' },
-      ],
-      B: [
-        { name: 'Espada de Diamante', note: 'Mid game sólida' },
-        { name: 'Espada Elemental', note: 'Alternativa mid' },
-      ],
-      C: [
-        { name: 'Espada de Ferro', note: 'Early game' },
-        { name: 'Espada de Pedra', note: 'Starter' },
-      ],
-      D: [
-        { name: 'Espada de Madeira', note: 'Apenas início' },
-      ],
-    }
-  },
-  {
-    id: 'pets',
-    title: 'Pets (Combate)',
-    description: 'Ranking dos melhores pets para combate',
-    updatedAt: 'Fev 2025',
-    tiers: {
-      S: [
-        { name: 'Dragão Lendário', note: 'Melhor para boss' },
-        { name: 'Enderman Lendário', note: 'Excelente dano' },
-      ],
-      A: [
-        { name: 'Lobo Lendário', note: 'Força + Crit. Damage' },
-        { name: 'Enderman Épico', note: 'Bom dano' },
-      ],
-      B: [
-        { name: 'Lobo Épico', note: 'Viável mid game' },
-        { name: 'Lobo Raro', note: 'Early combate' },
-      ],
-      C: [
-        { name: 'Gato Incomum', note: 'Velocidade ok' },
-      ],
-      D: [
-        { name: 'Abelha', note: 'Não é para combate' },
-      ],
-    }
-  },
-  {
-    id: 'farming',
-    title: 'Pets (Agricultura)',
-    description: 'Ranking dos melhores pets para farmar',
-    updatedAt: 'Fev 2025',
-    tiers: {
-      S: [
-        { name: 'Abelha Lendária', note: 'Melhor Fortuna de Agric.' },
-        { name: 'Gato Lendário', note: 'Velocidade + Fortuna' },
-      ],
-      A: [
-        { name: 'Abelha Épica', note: 'Excelente para farm' },
-        { name: 'Gato Épico', note: 'Bom custo-benefício' },
-      ],
-      B: [
-        { name: 'Abelha Rara', note: 'Mid game farming' },
-      ],
-      C: [
-        { name: 'Abelha Incomum', note: 'Início do jogo' },
-      ],
-      D: [
-        { name: 'Abelha Comum', note: 'Starter' },
-      ],
-    }
-  },
-  {
-    id: 'enchants',
-    title: 'Encantamentos',
-    description: 'Os encantamentos mais valiosos para equipamentos',
-    updatedAt: 'Fev 2025',
-    tiers: {
-      S: [
-        { name: 'Crítico V', note: '+50% dano crítico' },
-        { name: 'Primeiro Golpe IV', note: '+100% no primeiro hit' },
-      ],
-      A: [
-        { name: 'Nitidez V', note: '+25 de dano' },
-        { name: 'Poder V', note: '+40% dano arco' },
-      ],
-      B: [
-        { name: 'Proteção V', note: '+15 defesa' },
-        { name: 'Saque III', note: '+45% drop' },
-      ],
-      C: [
-        { name: 'Eficiência V', note: 'Velocidade de miner.' },
-      ],
-      D: [
-        { name: 'Crítico I', note: 'Fraco demais' },
-      ],
-    }
-  },
+    items: [
+      // S TIER
+      { tier: 'S', name: 'Espada do Dragão', note: 'Dano extremamente alto e escala forte' },
+      { tier: 'S', name: 'Espada do Pigman', note: 'Altíssimo dano físico e força' },
+      { tier: 'S', name: 'Bumerangue', note: 'Dano bruto muito alto' },
+      { tier: 'S', name: 'Cajado do Bonzo', note: 'Burst mágico muito forte' },
+      { tier: 'S', name: 'Machado Vulcânico', note: 'Dano alto com boa força' },
+
+      // A TIER
+      { tier: 'A', name: 'Aspecto do Fim', note: 'Dano e força equilibrados, muito forte early-mid' },
+      { tier: 'A', name: 'Espada Saltitante', note: 'Excelente dano e crit' },
+      { tier: 'A', name: 'Lombo de Cordeiro', note: 'Boa força e dano consistente' },
+      { tier: 'A', name: 'Buquê Fúnebre', note: 'Dano alto com componente mágico' },
+      { tier: 'A', name: 'Espada do Golem', note: 'Muito tank com bom dano' },
+      { tier: 'A', name: 'Cajado do Zombie', note: 'Boa mistura de força e dano' },
+      { tier: 'A', name: 'Espada de Pedra do Fim', note: 'Boa progressão mid game' },
+      { tier: 'A', name: 'Espada do Fim', note: 'Dano consistente early-mid' },
+
+      // B TIER
+      { tier: 'B', name: 'Presa de Prata', note: 'Dano alto porém sem escala' },
+      { tier: 'B', name: 'Vara de Brasa', note: 'Forte' },
+      { tier: 'B', name: 'Espada de Diamante', note: 'Mid game sólida' },
+      { tier: 'B', name: 'Espada de Ouro', note: 'Early game com leve força' },
+      { tier: 'B', name: 'Espada de Ferro', note: 'Básica porém funcional' },
+
+      // C TIER
+      { tier: 'C', name: 'Espada Flamejante', note: 'Dano ok mas sem escala' },
+      { tier: 'C', name: 'Espada do Morto-Vivo', note: 'Early game simples' },
+      { tier: 'C', name: 'Espada da Aranha', note: 'Early game básica' },
+      { tier: 'C', name: 'Lâmina de Esmeralda', note: 'Baixa utilidade geral' },
+      { tier: 'C', name: 'Cutelo', note: 'Fraca no geral' },
+
+      // D TIER
+      { tier: 'D', name: 'Espada de Pedra', note: 'Muito fraca' },
+      { tier: 'D', name: 'Espada de Madeira', note: 'Início absoluto do jogo' }
+    ]
+  }
 ];
+
+function groupByTier(items) {
+  const grouped = {
+    S: [],
+    A: [],
+    B: [],
+    C: [],
+    D: [],
+    F: [],
+  };
+
+  items.forEach(item => {
+    if (grouped[item.tier]) {
+      grouped[item.tier].push(item);
+    }
+  });
+
+  return grouped;
+}
 
 function TierRow({ tier, items }) {
   const tc = TIER_COLORS[tier];
@@ -150,8 +106,10 @@ function TierRow({ tier, items }) {
 }
 
 function TierListCard({ list }) {
+  const grouped = groupByTier(list.items);
+
   return (
-    <div data-testid={`tierlist-${list.id}`} className="bg-[#1E1E1E] border border-[#333]">
+    <div className="bg-[#1E1E1E] border border-[#333]">
       <div className="px-4 py-3 border-b border-[#333] flex items-center justify-between">
         <div>
           <p className="font-pixel text-[#FFAA00] text-sm">{list.title}</p>
@@ -159,9 +117,14 @@ function TierListCard({ list }) {
         </div>
         <span className="text-[#555] text-[10px]">Atualizado: {list.updatedAt}</span>
       </div>
+
       <div className="divide-y divide-[#2A2A2A]">
-        {Object.entries(list.tiers).map(([tier, items]) => (
-          <TierRow key={tier} tier={tier} items={items} />
+        {Object.entries(TIER_COLORS).map(([tier]) => (
+          <TierRow
+            key={tier}
+            tier={tier}
+            items={grouped[tier] || []}
+          />
         ))}
       </div>
     </div>
@@ -172,7 +135,6 @@ export default function TierListsPage() {
   const [activeTab, setActiveTab] = useState('swords');
   const activeList = TIER_LISTS.find(l => l.id === activeTab);
 
-  return <MaintenancePage/>
   return (
     <Layout>
       <div className="max-w-4xl mx-auto px-4 md:px-8 py-8">
@@ -190,11 +152,10 @@ export default function TierListsPage() {
               key={list.id}
               onClick={() => setActiveTab(list.id)}
               data-testid={`tierlist-tab-${list.id}`}
-              className={`px-4 py-2 text-sm font-medium transition-colors ${
-                activeTab === list.id
-                  ? 'bg-[#FFAA00] text-black font-pixel'
-                  : 'bg-[#1E1E1E] border border-[#333] text-[#AAAAAA] hover:border-[#555] hover:text-white'
-              }`}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${activeTab === list.id
+                ? 'bg-[#FFAA00] text-black font-pixel'
+                : 'bg-[#1E1E1E] border border-[#333] text-[#AAAAAA] hover:border-[#555] hover:text-white'
+                }`}
             >
               {list.title}
             </button>

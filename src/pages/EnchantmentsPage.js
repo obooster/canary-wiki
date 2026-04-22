@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { Search, Sparkles, X, ChevronDown, ChevronUp } from 'lucide-react';
 import Layout from '../components/Layout';

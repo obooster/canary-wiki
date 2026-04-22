@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { Search, Package, X, ChevronDown } from 'lucide-react';
+import { Search, Package, X } from 'lucide-react';
 import Layout from '../components/Layout';
 import { RARITY_COLORS, ATTR_LABELS, formatNumber } from '../utils/minecraft';
 
