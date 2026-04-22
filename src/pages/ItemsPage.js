@@ -89,21 +89,58 @@ function ItemCard({ itemKey, item, onClick }) {
 }
 
 function ItemModal({ itemKey, item, onClose }) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    requestAnimationFrame(() => setVisible(true));
+  }, []);
+
+  function handleClose() {
+    setVisible(false);
+    setTimeout(onClose, 200);
+  }
+
   if (!item) return null;
+
   const r = RARITY_COLORS[item.rarity] || RARITY_COLORS.COMMON;
+
   return (
-    <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4" onClick={onClose} data-testid="item-modal-overlay">
-      <div className="bg-[#1E1E1E] border border-[#333] max-w-md w-full max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()} data-testid="item-modal">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-[#333]" style={{ borderTopColor: r.hex, borderTopWidth: 2 }}>
+    <div
+      onClick={handleClose}
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ease-out ${
+        visible ? "bg-black/70 opacity-100" : "bg-black/0 opacity-0"
+      }`}
+      data-testid="item-modal-overlay"
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        className={`bg-[#1E1E1E] border border-[#333] max-w-md w-full max-h-[80vh] overflow-y-auto transition-all duration-300 ease-out ${
+          visible ? "scale-100 opacity-100" : "scale-90 opacity-0"
+        }`}
+        style={{ borderTopColor: r.hex, borderTopWidth: 2 }}
+        data-testid="item-modal"
+      >
+        {/* HEADER */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-[#333]">
           <div>
-            <p className="font-pixel text-sm" style={{ color: r.hex }}>{item.displayName}</p>
-            <p className="text-[#777] text-xs">{CATEGORY_LABELS[item.category] || item.category}</p>
+            <p className="font-pixel text-sm" style={{ color: r.hex }}>
+              {item.displayName}
+            </p>
+            <p className="text-[#777] text-xs">
+              {CATEGORY_LABELS[item.category] || item.category}
+            </p>
           </div>
-          <button onClick={onClose} className="text-[#777] hover:text-white" data-testid="item-modal-close">
+
+          <button
+            onClick={handleClose}
+            className="text-[#777] hover:text-white"
+            data-testid="item-modal-close"
+          >
             <X size={16} />
           </button>
         </div>
 
+        {/* CONTENT */}
         <div className="p-4 space-y-4">
           <div className="flex items-center gap-2">
             <RarityBadge rarity={item.rarity} />
@@ -111,14 +148,27 @@ function ItemModal({ itemKey, item, onClose }) {
 
           {item.baseAttributes && Object.keys(item.baseAttributes).length > 0 && (
             <div>
-              <p className="text-[#777] text-xs uppercase tracking-wider mb-2">Atributos Base</p>
+              <p className="text-[#777] text-xs uppercase tracking-wider mb-2">
+                Atributos Base
+              </p>
+
               <div className="space-y-1">
                 {Object.entries(item.baseAttributes).map(([attr, val]) => {
                   const a = ATTR_LABELS[attr];
+
                   return (
-                    <div key={attr} className="flex items-center justify-between py-1 border-b border-[#2A2A2A]">
-                      <span className="text-[#AAAAAA] text-xs">{a ? a.label : attr}</span>
-                      <span className="text-sm font-medium" style={{ color: a?.color || '#55FF55' }}>
+                    <div
+                      key={attr}
+                      className="flex items-center justify-between py-1 border-b border-[#2A2A2A]"
+                    >
+                      <span className="text-[#AAAAAA] text-xs">
+                        {a ? a.label : attr}
+                      </span>
+
+                      <span
+                        className="text-sm font-medium"
+                        style={{ color: a?.color || "#55FF55" }}
+                      >
                         {val > 0 ? `+${val}` : val}
                       </span>
                     </div>
@@ -130,12 +180,18 @@ function ItemModal({ itemKey, item, onClose }) {
 
           {item.sellPrice > 0 && (
             <div className="flex items-center justify-between bg-[#252525] px-3 py-2">
-              <span className="text-[#AAAAAA] text-xs">Preço de Venda</span>
-              <span className="text-[#FFAA00] font-pixel text-sm">{formatNumber(item.sellPrice)} moedas</span>
+              <span className="text-[#AAAAAA] text-xs">
+                Preço de Venda
+              </span>
+              <span className="text-[#FFAA00] font-pixel text-sm">
+                {formatNumber(item.sellPrice)} moedas
+              </span>
             </div>
           )}
 
-          <div className="text-[#555] text-xs font-mono">ID: {itemKey}</div>
+          <div className="text-[#555] text-xs font-mono">
+            ID: {itemKey}
+          </div>
         </div>
       </div>
     </div>

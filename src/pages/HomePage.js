@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Search, Package, Sparkles, Hammer, BookOpen, Heart, Skull, Map, ScrollText, Trophy, ExternalLink, ChevronRight } from 'lucide-react';
 import Layout from '../components/Layout';
 
-const HERO_BG = 'https://static.prod-images.emergentagent.com/jobs/041182b9-2427-47ba-b03d-c3ae49a261ff/images/1bf7726641a800ae6acef8bf3218d9209ef02cf37317ac656b6d95b5f78ddcf7.png';
-const LOGO_URL = 'https://customer-assets.emergentagent.com/job_canary-hypixel-home/artifacts/tklmbq9t_generated-image-removebg-preview.png';
+import background from '../background.png'
+import logo from '../icon.png'
 
 const CATEGORIES = [
   { path: '/getting-started', label: 'Guia de Início', icon: Map, desc: 'Como começar no servidor', color: '#55FF55', testId: 'category-card-guide' },
@@ -27,6 +27,42 @@ const STATS = [
   { label: 'Coleções', value: '40+' }
 ];
 
+function AnimatedNumber({ value, duration = 1200 }) {
+  const numeric = parseInt(value.replace(/\D/g, "")) || 0;
+  const suffix = value.replace(/[0-9]/g, "");
+
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const startTime = performance.now();
+
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    function animate(now) {
+      const raw = Math.min((now - startTime) / duration, 1);
+      const eased = easeOutCubic(raw);
+
+      const current = Math.floor(eased * numeric);
+      setDisplay(current);
+
+      if (raw < 1) {
+        requestAnimationFrame(animate);
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }, [numeric, duration]);
+
+  return (
+    <span>
+      {display}{suffix}
+    </span>
+  );
+}
+
 export default function HomePage() {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
@@ -41,7 +77,7 @@ export default function HomePage() {
       <section
         data-testid="hero-section"
         className="relative min-h-[420px] flex flex-col items-center justify-center text-center px-4 py-16 overflow-hidden"
-        style={{ background: `linear-gradient(to bottom, #121212cc, #121212ee), url('${HERO_BG}') center/cover no-repeat` }}
+        style={{ background: `linear-gradient(to bottom, #121212cc, #121212ee), url('${background}') center/cover no-repeat` }}
       >
         <div
           className="absolute inset-0 opacity-5"
@@ -53,7 +89,7 @@ export default function HomePage() {
 
         <div className="relative z-10 flex flex-col items-center gap-6 max-w-2xl mx-auto">
           <img
-            src={LOGO_URL}
+            src={logo}
             alt="RedeCanary"
             className="w-20 h-20 object-contain drop-shadow-[0_0_20px_#FFAA0066] animate-float"
             data-testid="hero-logo"
@@ -92,7 +128,7 @@ export default function HomePage() {
           <div className="flex flex-wrap justify-center gap-6">
             {STATS.map(s => (
               <div key={s.label} className="text-center">
-                <p className="font-pixel text-[#FFAA00] text-lg">{s.value}</p>
+                <p className="font-pixel text-[#FFAA00] text-lg tabular-nums min-w-[60px] text-center"><AnimatedNumber value={s.value} /></p>
                 <p className="text-[#777] text-xs">{s.label}</p>
               </div>
             ))}
@@ -159,7 +195,7 @@ export default function HomePage() {
 
       <footer className="mt-auto border-t border-[#333] px-4 py-6 text-center">
         <div className="flex items-center justify-center gap-2 mb-2">
-          <img src={LOGO_URL} alt="RedeCanary" className="w-5 h-5 object-contain" />
+          <img src={logo} alt="RedeCanary" className="w-5 h-5 object-contain" />
           <span className="font-pixel text-[#FFAA00] text-xs">RedeCanary Wiki</span>
         </div>
         <p className="text-[#555] text-xs">

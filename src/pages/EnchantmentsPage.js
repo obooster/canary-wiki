@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import axios from 'axios';
 import { Search, Sparkles, X, ChevronDown, ChevronUp } from 'lucide-react';
 import Layout from '../components/Layout';
@@ -35,61 +35,78 @@ function McTextSpan({ text }) {
 
 function EnchantCard({ enchKey, ench }) {
   const [expanded, setExpanded] = useState(false);
+  const [height, setHeight] = useState(0);
+  const contentRef = useRef(null);
+
   const extra = ench.extra || {};
   const descriptions = extra.descriptions || {};
   const expCosts = extra.expCosts || {};
   const sellPrices = extra.sellPrices || {};
   const targets = extra.targets || [];
 
+  useEffect(() => {
+    if (expanded) {
+      const el = contentRef.current;
+      setHeight(el.scrollHeight);
+    } else {
+      setHeight(0);
+    }
+  }, [expanded]);
+
   return (
-    <div
-      data-testid={`enchant-card-${enchKey.toLowerCase()}`}
-      className="bg-[#1E1E1E] border border-[#333] hover:border-[#AA00AA55] transition-colors"
-    >
+    <div className="bg-[#1E1E1E] border border-[#333] hover:border-[#AA00AA55] transition-colors">
+
+      {/* HEADER */}
       <button
         className="w-full flex items-center justify-between px-4 py-3 text-left"
-        onClick={() => setExpanded(!expanded)}
+        onClick={() => setExpanded(prev => !prev)}
       >
         <div className="flex items-center gap-3">
-          <Sparkles size={16} className="text-[#AA00AA] flex-shrink-0" strokeWidth={2.5} />
+          <Sparkles size={16} className="text-[#AA00AA]" />
           <div>
             <p className="text-white font-medium text-sm">{ench.name}</p>
+
             <div className="flex items-center gap-2 mt-0.5">
               <span className="text-[10px] text-[#AA00AA] bg-[#AA00AA18] px-1.5 py-0.5">
                 Nv. Máx: {ench.maxLevel}
               </span>
+
               {targets.slice(0, 3).map(t => (
-                <span
-                  key={t}
-                  className="text-[10px] text-[#5555FF] bg-[#5555FF18] px-1.5 py-0.5"
-                >
+                <span key={t} className="text-[10px] text-[#5555FF] bg-[#5555FF18] px-1.5 py-0.5">
                   {TARGET_LABELS[t] || t}
                 </span>
               ))}
             </div>
           </div>
         </div>
-        {expanded ? (
-          <ChevronUp size={14} className="text-[#777]" />
-        ) : (
-          <ChevronDown size={14} className="text-[#777]" />
-        )}
+
+        {expanded
+          ? <ChevronUp size={14} className="text-[#777]" />
+          : <ChevronDown size={14} className="text-[#777]" />
+        }
       </button>
 
-      {expanded && (
-        <div className="px-4 pb-4 border-t border-[#2A2A2A] space-y-4">
+      {/* CONTAINER ANIMADO */}
+      <div
+        style={{ height }}
+        className="overflow-hidden transition-all duration-300 ease-out"
+      >
+        <div ref={contentRef} className="px-4 pb-4 border-t border-[#2A2A2A] space-y-4">
 
+          {/* DESCRIÇÕES */}
           {Object.keys(descriptions).length > 0 && (
             <div>
               <p className="text-[#777] text-xs uppercase tracking-wider mt-3 mb-2">
                 Efeitos por Nível
               </p>
+
               <div className="space-y-1">
                 {Object.entries(descriptions).map(([lvl, descs]) => (
                   <div key={lvl} className="flex gap-2 py-1 border-b border-[#2A2A2A]">
-                    <span className="text-[#FFAA00] font-pixel text-xs w-4 flex-shrink-0">
+                    <span className="text-[#FFAA00] font-pixel text-xs w-4">
                       {lvl}
                     </span>
+
                     <div className="text-xs">
                       {descs.map((d, i) => (
                         <p key={i}><McTextSpan text={d} /></p>
@@ -101,11 +118,13 @@ function EnchantCard({ enchKey, ench }) {
             </div>
           )}
 
+          {/* XP */}
           {Object.keys(expCosts).length > 0 && (
             <div>
               <p className="text-[#777] text-xs uppercase tracking-wider mb-2">
                 Custo em XP
               </p>
+
               <div className="flex flex-wrap gap-2">
                 {Object.entries(expCosts).map(([lvl, cost]) => (
                   <div key={lvl} className="text-center bg-[#252525] px-2 py-1">
@@ -117,11 +136,13 @@ function EnchantCard({ enchKey, ench }) {
             </div>
           )}
 
+          {/* PREÇO */}
           {Object.keys(sellPrices).length > 0 && (
             <div>
               <p className="text-[#777] text-xs uppercase tracking-wider mb-2">
                 Preço de Venda
               </p>
+
               <div className="flex flex-wrap gap-2">
                 {Object.entries(sellPrices).map(([lvl, price]) => (
                   <div key={lvl} className="text-center bg-[#252525] px-2 py-1">
@@ -133,16 +154,15 @@ function EnchantCard({ enchKey, ench }) {
             </div>
           )}
 
+          {/* TARGETS */}
           <div>
             <p className="text-[#777] text-xs uppercase tracking-wider mb-2">
               Aplicável em
             </p>
+
             <div className="flex flex-wrap gap-1">
               {targets.map(t => (
-                <span
-                  key={t}
-                  className="text-xs text-[#5555FF] bg-[#5555FF18] border border-[#5555FF33] px-2 py-0.5"
-                >
+                <span key={t} className="text-xs text-[#5555FF] bg-[#5555FF18] border border-[#5555FF33] px-2 py-0.5">
                   {TARGET_LABELS[t] || t}
                 </span>
               ))}
@@ -154,8 +174,9 @@ function EnchantCard({ enchKey, ench }) {
               <X size={11} /> Não disponível na mesa de encantamentos
             </p>
           )}
+
         </div>
-      )}
+      </div>
     </div>
   );
 }

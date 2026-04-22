@@ -16,7 +16,7 @@ const TIER_LISTS = [
     id: 'swords',
     title: 'Espadas',
     description: 'Ranking das melhores espadas para early a late game',
-    updatedAt: 'Fev 2025',
+    updatedAt: 'Abr 2026',
     items: [
       // S TIER
       { tier: 'S', name: 'Espada do Dragão', note: 'Dano extremamente alto e escala forte' },
