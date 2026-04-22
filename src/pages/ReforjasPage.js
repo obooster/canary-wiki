@@ -32,7 +32,8 @@ const ATTR_LABELS = {
   MAX_INTELLIGENCE: 'Inteligência',
   MAGIC_DAMAGE: 'Dano mágico',
   BONUS_ATTACK_SPEED: 'Vel. Ataque',
-  FARMING_FORTUNE: 'Fort. de Farm'
+  FARMING_FORTUNE: 'Fort. de Farm',
+  HASTE: 'Pressa'
 };
 
 function formatStatValue(value) {
