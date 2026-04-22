@@ -78,15 +78,6 @@ https://github.com/RedeCanary/redecanary-requests/
 
 ---
 
-## 📌 Observações
-
-- Servidor roda Minecraft Java (SkyBlock custom)
-- Wiki não depende de backend próprio
-- Conteúdo vem de JSON externo
-- Interface totalmente client-side
-
----
-
 ## 🏷️ Licença
 
 Projeto interno da comunidade RedeCanary
