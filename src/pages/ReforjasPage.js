@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { Search, Hammer, X } from 'lucide-react';
 import Layout from '../components/Layout';
+import { RARITY_COLORS } from '../utils/minecraft';
 
 const API = `https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/reforges.json`;
 
@@ -11,13 +12,14 @@ const CATEGORY_LABELS = {
   ARMOR: 'Armadura',
   PICKAXE: 'Picareta',
   ACCESSORY: 'Acessório',
-
   NECKLACE: 'Colar',
   CLOAK: 'Manto',
   BELT: 'Cinto',
   BRACELET: 'Bracelete',
   HOE: 'Enxada',
 };
+
+const RARITIES = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY'];
 
 const ATTR_LABELS = {
   STRENGTH: 'Força',
@@ -27,54 +29,88 @@ const ATTR_LABELS = {
   SPEED: 'Velocidade',
   CRIT_CHANCE: 'Chance Crítica',
   CRIT_DAMAGE: 'Dano Crítico',
-  MAX_INTELLIGENCE: 'Int. Máxima',
-  INTELLIGENCE: 'Inteligência',
+  MAX_INTELLIGENCE: 'Inteligência',
+  MAGIC_DAMAGE: 'Dano mágico',
   BONUS_ATTACK_SPEED: 'Vel. Ataque',
-  MAGIC_DAMAGE: 'Dano Mágico',
-  FARMING_FORTUNE: 'Fort. de Farm',
-  HASTE: 'Pressa'
+  FARMING_FORTUNE: 'Fort. de Farm'
 };
 
+function formatStatValue(value) {
+  const num = Number(value);
+  if (isNaN(num)) return value;
+
+  if (num > 0) return `+${num}`;
+  return `${num}`;
+}
+
 function StatBadge({ stat, value }) {
+  const num = Number(value);
+  const isNegative = num < 0;
+
   return (
     <div className="flex items-center justify-between py-1">
-      <span className="text-[#AAAAAA] text-xs">{ATTR_LABELS[stat] || stat}</span>
-      <span className="text-[#55FF55] text-xs font-medium">+{value}</span>
+      <span className="text-[#AAAAAA] text-xs">
+        {ATTR_LABELS[stat] || stat}
+      </span>
+
+      <span
+        className="text-xs font-medium"
+        style={{ color: isNegative ? '#FF5555' : '#55FF55' }}
+      >
+        {formatStatValue(value)}
+      </span>
     </div>
   );
 }
 
 function ReforgeCard({ refKey, refData }) {
-  const firstEntry = Object.values(refData)[0] || {};
-  const category = firstEntry.category || '';
-  const name = firstEntry.name || refKey;
+  const first = Object.values(refData)[0] || {};
+  const name = first.name || refKey;
+  const category = first.category || '';
 
-  const data = firstEntry.stats || {};
+  const availableRarities = RARITIES.filter(r => refData[r]);
+  const [rarity, setRarity] = useState(availableRarities[0]);
+
+  const current = refData[rarity] || {};
+
+  const stats = current.stats || {};
 
   return (
-    <div
-      data-testid={`reforge-card-${refKey.toLowerCase()}`}
-      className="bg-[#1E1E1E] border border-[#333] hover:border-[#FF555533] transition-colors"
-    >
-      <div className="px-4 py-3 border-b border-[#2A2A2A] flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Hammer size={16} className="text-[#FF5555]" strokeWidth={2.5} />
-          <div>
-            <p className="text-white font-medium text-sm">{name}</p>
-            <span className="text-[10px] text-[#FF5555] bg-[#FF555518] px-1.5 py-0.5">
-              {CATEGORY_LABELS[category] || category}
-            </span>
-          </div>
+    <div className="bg-[#1E1E1E] border border-[#333]">
+      <div className="px-4 py-3 border-b border-[#2A2A2A] flex justify-between items-center">
+        <div>
+          <p className="text-white text-sm font-medium">{name}</p>
+          <span className="text-[10px] text-[#FF5555]">
+            {CATEGORY_LABELS[category] || category}
+          </span>
+        </div>
+
+        <div className="flex gap-1">
+          {availableRarities.map(r => {
+            const c = RARITY_COLORS[r];
+            return (
+              <button
+                key={r}
+                onClick={() => setRarity(r)}
+                className="w-4 h-4"
+                style={{
+                  background: c?.hex,
+                  opacity: rarity === r ? 1 : 0.4,
+                  outline: rarity === r ? `2px solid ${c?.hex}` : 'none'
+                }}
+              />
+            );
+          })}
         </div>
       </div>
 
       <div className="px-4 py-3">
-        {data && Object.keys(data).length > 0 ? (
-          Object.entries(data).map(([stat, val]) => (
-            <StatBadge key={stat} stat={stat} value={val} />
+        {Object.keys(stats).length > 0 ? (
+          Object.entries(stats).map(([k, v]) => (
+            <StatBadge key={k} stat={k} value={v} />
           ))
         ) : (
-          <p className="text-[#555] text-xs">Sem bônus disponível</p>
+          <p className="text-[#555] text-xs">Sem bônus para essa raridade</p>
         )}
       </div>
     </div>
@@ -83,15 +119,13 @@ function ReforgeCard({ refKey, refData }) {
 
 export default function ReforjasPage() {
   const [reforges, setReforges] = useState({});
-  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState('');
 
   useEffect(() => {
     axios.get(API)
       .then(r => setReforges(r.data))
-      .catch(console.error)
-      .finally(() => setLoading(false));
+      .catch(console.error);
   }, []);
 
   const categories = useMemo(() => {
@@ -104,52 +138,42 @@ export default function ReforjasPage() {
   }, [reforges]);
 
   const filtered = useMemo(() => {
-    return Object.entries(reforges).filter(([, refData]) => {
-      const first = Object.values(refData)[0] || {};
+    return Object.entries(reforges).filter(([, data]) => {
+      const first = Object.values(data)[0] || {};
       const name = first.name || '';
       const cat = first.category || '';
 
-      const matchSearch = !search || name.toLowerCase().includes(search.toLowerCase());
-      const matchCat = !catFilter || cat === catFilter;
-
-      return matchSearch && matchCat;
+      return (
+        (!search || name.toLowerCase().includes(search.toLowerCase())) &&
+        (!catFilter || cat === catFilter)
+      );
     });
   }, [reforges, search, catFilter]);
 
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto px-4 md:px-8 py-8">
-        <div className="mb-6">
-          <h1 className="font-pixel text-2xl md:text-3xl text-[#FF5555] mb-1">
-            Reforjas
-          </h1>
-          <p className="text-[#777] text-sm">
-            Bônus de status por tipo de reforja
-          </p>
-        </div>
+      <div className="max-w-4xl mx-auto px-4 py-8">
 
-        <div className="flex flex-wrap gap-3 mb-6">
-          <div className="flex items-center gap-2 bg-[#1E1E1E] border border-[#333] px-3 py-2 flex-1 min-w-48">
-            <Search size={14} className="text-[#777]" />
+        <h1 className="text-2xl text-[#FF5555] font-pixel mb-4">Reforjas</h1>
+
+        <div className="flex gap-3 mb-6">
+          <div className="flex items-center gap-2 bg-[#1E1E1E] border border-[#333] px-3 py-2 flex-1">
+            <Search size={14} />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Buscar reforja..."
-              className="bg-transparent text-white text-sm outline-none flex-1 placeholder-[#555]"
+              className="bg-transparent outline-none text-sm flex-1"
             />
-            {search && (
-              <button onClick={() => setSearch('')}>
-                <X size={12} className="text-[#777]" />
-              </button>
-            )}
+            {search && <button onClick={() => setSearch('')}><X size={12} /></button>}
           </div>
 
           <select
             value={catFilter}
             onChange={e => setCatFilter(e.target.value)}
-            className="bg-[#1E1E1E] border border-[#333] text-sm px-3 py-2 text-[#AAAAAA] outline-none cursor-pointer"
+            className="bg-[#1E1E1E] border border-[#333] px-3 py-2 text-sm"
           >
-            <option value="">Todas as categorias</option>
+            <option value="">Todas categorias</option>
             {categories.map(c => (
               <option key={c} value={c}>
                 {CATEGORY_LABELS[c] || c}
@@ -158,30 +182,12 @@ export default function ReforjasPage() {
           </select>
         </div>
 
-        <p className="text-[#777] text-xs mb-4">
-          {filtered.length} reforja{filtered.length !== 1 ? 's' : ''}
-        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {filtered.map(([k, v]) => (
+            <ReforgeCard key={k} refKey={k} refData={v} />
+          ))}
+        </div>
 
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-32 bg-[#1E1E1E] border border-[#333] animate-pulse" />
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {filtered.map(([key, data]) => (
-              <ReforgeCard key={key} refKey={key} refData={data} />
-            ))}
-
-            {filtered.length === 0 && (
-              <div className="col-span-2 text-center py-16 text-[#555]">
-                <Hammer size={40} className="mx-auto mb-3 opacity-30" />
-                <p>Nenhuma reforja encontrada</p>
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </Layout>
   );

@@ -26,11 +26,12 @@ export const ATTR_LABELS = {
   SPEED: { label: 'Velocidade', color: '#55FFFF' },
   CRIT_CHANCE: { label: 'Crit Chance', color: '#FFAA00' },
   CRIT_DAMAGE: { label: 'Crit Damage', color: '#FFAA00' },
-  FARMING_FORTUNE: { label: 'Fortuna de Farm', color: '#FFAA00' },
+  FARMING_FORTUNE: { label: 'Fort. de Farm', color: '#FFAA00' },
   HEALTH_REGEN: { label: 'Regeneração de Vida', color: '#FF5555' },
   STRENGTH: { label: 'Força', color: '#FF5555' },
   MAX_INTELLIGENCE: { label: 'Inteligência Máxima', color: '#55FFFF' },
-  HASTE: { label: 'Pressa', color: '#55FFFF' }
+  HASTE: { label: 'Pressa', color: '#55FFFF' },
+  BONUS_ATTACK_SPEED: { label: 'Vel. Ataque', color: '#3cff46' }
 };
 
 export const SKILL_LABELS = {
