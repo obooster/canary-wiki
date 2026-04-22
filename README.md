@@ -74,16 +74,7 @@ Cada raridade possui cor própria e impacto visual na UI.
 
 ## 📡 Fonte de dados
 
-https://raw.githubusercontent.com/RedeCanary/redecanary-requests/
-
----
-
-## 📌 Observações
-
-- Servidor roda Minecraft Java (SkyBlock custom)
-- Wiki não depende de backend próprio
-- Conteúdo vem de JSON externo
-- Interface totalmente client-side
+https://github.com/RedeCanary/redecanary-requests/
 
 ---
 
