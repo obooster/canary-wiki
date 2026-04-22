@@ -74,7 +74,7 @@ Cada raridade possui cor própria e impacto visual na UI.
 
 ## 📡 Fonte de dados
 
-https://raw.githubusercontent.com/RedeCanary/redecanary-requests/
+https://github.com/RedeCanary/redecanary-requests/
 
 ---
 
