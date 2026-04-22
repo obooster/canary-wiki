@@ -30,16 +30,12 @@ function ProgressBar({ value, max }) {
   );
 }
 
-function getIcon(material) {
-  switch (material) {
-    case 'PUMPKIN': return '🎃';
-    case 'WHEAT': return '🌾';
-    case 'COAL': return '🪨';
-    case 'ROTTEN_FLESH': return '🧟';
-    case 'SUGAR_CANE': return '🎋';
-    case 'DIAMOND': return '💎';
-    default: return '📦';
-  }
+function ItemIcon() {
+  return (
+    <div className="w-8 h-8 flex items-center justify-center bg-[#252525] border border-[#333] overflow-hidden">
+      <span className="text-lg">📦</span>
+    </div>
+  );
 }
 
 function CollectionCard({ colKey, col }) {
@@ -56,7 +52,7 @@ function CollectionCard({ colKey, col }) {
       >
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 flex items-center justify-center bg-[#252525] border border-[#333] text-lg">
-            {getIcon(col.material)}
+            <ItemIcon />
           </div>
 
           <div>
