@@ -84,7 +84,7 @@ const STEPS = [
   },
 ];
 
-export default function GuiaPage() {
+export default function GuidePage() {
   return (
     <Layout>
       <div className="max-w-3xl mx-auto px-4 md:px-8 py-8">

@@ -2,11 +2,10 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import axios from 'axios';
 import { Search, Heart, X, Star } from 'lucide-react';
 import Layout from '../components/Layout';
-import { RARITY_COLORS, SKILL_LABELS, ATTR_LABELS, getHead } from '../utils/Minecraft';
+import { RARITY_COLORS, SKILL_LABELS, ATTR_LABELS, rarities as RARITIES, getHead } from '../utils/Minecraft';
 
 const API = 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/pets.json';
 
-const RARITIES = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY'];
 
 function PetAvatar({ pet }) {
   const headUrl = getHead(pet.texture);

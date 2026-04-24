@@ -2,18 +2,9 @@ import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { Search, Package, X } from 'lucide-react';
 import Layout from '../components/Layout';
-import { RARITY_COLORS, ATTR_LABELS, formatNumber } from '../utils/Minecraft';
+import { RARITY_COLORS, ATTR_LABELS, RARITY_ORDER, rarities, formatNumber } from '../utils/Minecraft';
 
 const API = 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/items.json';
-
-const RARITY_ORDER = {
-  COMMON: 1,
-  UNCOMMON: 2,
-  RARE: 3,
-  EPIC: 4,
-  LEGENDARY: 5,
-  SPECIAL: 6
-};
 
 const CATEGORY_LABELS = {
   HELMET: 'Capacete',
@@ -215,7 +206,6 @@ export default function ItemsPage() {
   }, []);
 
   const categories = useMemo(() => [...new Set(Object.values(items).map(i => i.category))].sort(), [items]);
-  const rarities = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY', 'SPECIAL'];
 
   const filtered = useMemo(() => {
     return Object.entries(items)

@@ -181,7 +181,7 @@ function EnchantCard({ench}) {
   );
 }
 
-export default function EncantamentosPage() {
+export default function EnchantmentsPage() {
   const [enchants, setEnchants] = useState({});
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');

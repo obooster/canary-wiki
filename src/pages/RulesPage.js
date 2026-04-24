@@ -219,7 +219,7 @@ function RuleSection({ section }) {
   );
 }
 
-export default function RegrasPage() {
+export default function RulesPage() {
   return (
     <Layout>
       <div className="max-w-3xl mx-auto px-4 md:px-8 py-8">

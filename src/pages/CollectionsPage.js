@@ -148,7 +148,7 @@ function CollectionCard({col}) {
   );
 }
 
-export default function ColecoesPage() {
+export default function CollectionsPage() {
   const [collections, setCollections] = useState({});
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');

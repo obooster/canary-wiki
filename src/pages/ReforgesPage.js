@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { Search, X } from 'lucide-react';
 import Layout from '../components/Layout';
-import { RARITY_COLORS } from '../utils/Minecraft';
+import { RARITY_COLORS, rarities as RARITIES } from '../utils/Minecraft';
 
 const API = `https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/reforges.json`;
 
@@ -18,8 +18,6 @@ const CATEGORY_LABELS = {
   BRACELET: 'Bracelete',
   HOE: 'Enxada',
 };
-
-const RARITIES = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY'];
 
 const ATTR_LABELS = {
   STRENGTH: 'Força',
@@ -131,7 +129,7 @@ function ReforgeCard({ refKey, refData }) {
   );
 }
 
-export default function ReforjasPage() {
+export default function ReforgePage() {
   const [reforges, setReforges] = useState({});
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState('');

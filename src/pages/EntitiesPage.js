@@ -158,7 +158,7 @@ function EntityCard({ entKey, entity }) {
   );
 }
 
-export default function EntidadesPage() {
+export default function EntitiesPage() {
   const [entities, setEntities] = useState({});
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');

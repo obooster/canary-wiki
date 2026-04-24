@@ -29,6 +29,17 @@ export const RARITY_COLORS = {
   SPECIAL: { hex: '#ff322e', label: 'Especial', border: '#ff322e22' },
 };
 
+export const RARITY_ORDER = {
+  COMMON: 1,
+  UNCOMMON: 2,
+  RARE: 3,
+  EPIC: 4,
+  LEGENDARY: 5,
+  SPECIAL: 6
+};
+
+export const rarities = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY', 'SPECIAL'];
+
 export function stripMcCodes(text = '') {
   return text.replace(/§./g, '');
 }
