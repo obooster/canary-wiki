@@ -73,12 +73,24 @@ function ReforgeCard({ refKey, refData }) {
   const [rarity, setRarity] = useState(availableRarities[0]);
 
   const current = refData[rarity] || {};
-
   const stats = current.stats || {};
 
+  const color = RARITY_COLORS[rarity]?.hex || '#333';
+
   return (
-    <div className="bg-[#1E1E1E] border border-[#333]">
-      <div className="px-4 py-3 border-b border-[#2A2A2A] flex justify-between items-center">
+    <div
+      className="bg-[#1E1E1E] border transition-all duration-200"
+      style={{
+        borderColor: `${color}55`,
+        boxShadow: `0 0 0 1px ${color}33`,
+      }}
+    >
+      <div
+        className="px-4 py-3 border-b border-[#2A2A2A] flex justify-between items-center"
+        style={{
+          borderTop: `2px solid ${color}`
+        }}
+      >
         <div>
           <p className="text-white text-sm font-medium">{name}</p>
           <span className="text-[10px] text-[#FF5555]">
@@ -93,10 +105,11 @@ function ReforgeCard({ refKey, refData }) {
               <button
                 key={r}
                 onClick={() => setRarity(r)}
-                className="w-4 h-4"
+                className="w-4 h-4 transition-all"
                 style={{
                   background: c?.hex,
                   opacity: rarity === r ? 1 : 0.4,
+                  transform: rarity === r ? 'scale(1.1)' : 'scale(1)',
                   outline: rarity === r ? `2px solid ${c?.hex}` : 'none'
                 }}
               />

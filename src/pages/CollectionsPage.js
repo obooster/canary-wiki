@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Search, BookOpen, X, ChevronDown, ChevronUp } from 'lucide-react';
 import Layout from '../components/Layout';
 import { parseMcText, SKILL_LABELS } from '../utils/minecraft';
@@ -40,7 +40,19 @@ function ItemIcon() {
 
 function CollectionCard({ colKey, col }) {
   const [expanded, setExpanded] = useState(false);
+  const [height, setHeight] = useState(0);
+  const contentRef = useRef(null);
+
   const skill = SKILL_LABELS[col.skillType] || { label: col.skillType, color: '#AAAAAA' };
+
+  useEffect(() => {
+    if (expanded) {
+      const el = contentRef.current;
+      setHeight(el.scrollHeight);
+    } else {
+      setHeight(0);
+    }
+  }, [expanded]);
 
   return (
     <div className="bg-[#1E1E1E] border border-[#333] hover:border-[#55FF5533] transition-colors">
@@ -48,7 +60,7 @@ function CollectionCard({ colKey, col }) {
       {/* HEADER */}
       <button
         className="w-full flex items-center justify-between px-4 py-3 text-left"
-        onClick={() => setExpanded(!expanded)}
+        onClick={() => setExpanded(prev => !prev)}
       >
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 flex items-center justify-center bg-[#252525] border border-[#333] text-lg">
@@ -79,9 +91,12 @@ function CollectionCard({ colKey, col }) {
         }
       </button>
 
-      {/* CONTENT */}
-      {expanded && (
-        <div className="px-4 pb-4 border-t border-[#2A2A2A]">
+      {/* CONTAINER ANIMADO */}
+      <div
+        style={{ height }}
+        className="overflow-hidden transition-all duration-300 ease-in-out"
+      >
+        <div ref={contentRef} className="px-4 pb-4 border-t border-[#2A2A2A]">
 
           <p className="text-[#777] text-xs uppercase tracking-wider mt-3 mb-3">
             Progressão de Níveis
@@ -128,7 +143,7 @@ function CollectionCard({ colKey, col }) {
           </div>
 
         </div>
-      )}
+      </div>
     </div>
   );
 }

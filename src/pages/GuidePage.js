@@ -44,8 +44,8 @@ const STEPS = [
     title: 'Sistema de Itens',
     icon: '⚔️',
     content: [
-      'Itens possuem raridades: Comum, Incomum, Raro, Épico e Lendário',
-      'Raridade maior significa melhores atributos base',
+      'Itens possuem raridades: Comum, Incomum, Raro, Épico, Lendário e Especial',
+      'Raridade maior pode significar melhores atributos base',
       'Itens podem ser obtidos por drop, crafting ou comércio',
       'Equipamentos são essenciais para progressão',
     ],
