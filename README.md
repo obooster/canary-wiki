@@ -37,14 +37,6 @@ Ele centraliza informações importantes do jogo em uma interface moderna, rápi
 
 ---
 
-## 📦 Estrutura do projeto
-
-  /src  
-  /components      Layout, navbar, sidebar  
-  /pages           Páginas da wiki  
-
----
-
 ## 🧠 Lógica principal
 
 ### Itens
@@ -53,8 +45,10 @@ Ele centraliza informações importantes do jogo em uma interface moderna, rápi
   - Nome
   - Categoria
   - Raridade
-- Ordenação padrão:
-  Special → Legendary → Epic → Rare → Uncommon → Common
+- Ordenados por:
+  - Raridade
+  - Preço (maior)
+  - Preço (menor)
 
 ### Interface
 - Sidebar fixa no desktop
@@ -66,7 +60,7 @@ Ele centraliza informações importantes do jogo em uma interface moderna, rápi
 
 ## 🎮 Sistema de raridade
 
-COMMON < UNCOMMON < RARE < EPIC < LEGENDARY < SPECIAL
+COMUM < INCOMUM < RARO < ÉPICO < LENDÁRIO < ESPECIAL
 
 Cada raridade possui cor própria e impacto visual na UI.
 
