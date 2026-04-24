@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import "./App.css";
 
-import SplashScreen from "./SplashScreen";
+import SplashScreen from "./components/SplashScreen";
 
 import HomePage from "./pages/HomePage";
 import ItemsPage from "./pages/ItemsPage";
@@ -20,9 +20,7 @@ import SearchPage from "./pages/SearchPage";
 export default function App() {
   const [loading, setLoading] = useState(true)
 
-  if (loading) {
-    return <SplashScreen onFinish={() => setLoading(false)} />
-  }
+  if (loading) return <SplashScreen onFinish={() => setLoading(false)} />
 
   console.log('feito com amor pelo busti')
   return (

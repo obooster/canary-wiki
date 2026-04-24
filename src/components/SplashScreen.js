@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import logo from "./icon.png"
+import logo from "../icon.png"
 
 export default function SplashScreen({ onFinish }) {
   const [exiting, setExiting] = useState(false);

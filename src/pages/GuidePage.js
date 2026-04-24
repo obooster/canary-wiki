@@ -2,6 +2,13 @@ import { Link } from 'react-router-dom';
 import { Map, ChevronRight, Package, Sparkles, Heart, BookOpen } from 'lucide-react';
 import Layout from '../components/Layout';
 
+const QUICK_LINKS = [
+  { to: '/items', icon: Package, label: 'Ver Itens', color: '#5555FF' },
+  { to: '/enchantments', icon: Sparkles, label: 'Encantamentos', color: '#AA00AA' },
+  { to: '/pets', icon: Heart, label: 'Pets', color: '#FF55FF' },
+  { to: '/collections', icon: BookOpen, label: 'Coleções', color: '#55FF55' },
+];
+
 const STEPS = [
   {
     id: 1,
@@ -75,13 +82,6 @@ const STEPS = [
     ],
     tip: 'Visite o vilarejo regularmente para boas oportunidades',
   },
-];
-
-const QUICK_LINKS = [
-  { to: '/items', icon: Package, label: 'Ver Itens', color: '#5555FF' },
-  { to: '/enchantments', icon: Sparkles, label: 'Encantamentos', color: '#AA00AA' },
-  { to: '/pets', icon: Heart, label: 'Pets', color: '#FF55FF' },
-  { to: '/collections', icon: BookOpen, label: 'Coleções', color: '#55FF55' },
 ];
 
 export default function GuiaPage() {

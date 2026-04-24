@@ -2,14 +2,14 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import axios from 'axios';
 import { Search, Heart, X, Star } from 'lucide-react';
 import Layout from '../components/Layout';
-import { RARITY_COLORS, SKILL_LABELS, ATTR_LABELS, getPetHeadUrl } from '../utils/minecraft';
+import { RARITY_COLORS, SKILL_LABELS, ATTR_LABELS, getHead } from '../utils/Minecraft';
 
 const API = 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/pets.json';
 
 const RARITIES = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY'];
 
 function PetAvatar({ pet }) {
-  const headUrl = getPetHeadUrl(pet.texture);
+  const headUrl = getHead(pet.texture);
   const [imgErr, setImgErr] = useState(false);
 
   if (headUrl && !imgErr) {
@@ -35,7 +35,7 @@ function PetAvatar({ pet }) {
   );
 }
 
-function PetCard({ petKey, pet }) {
+function PetCard({pet}) {
   const [selectedRarity, setSelectedRarity] = useState(
     pet.rarities?.includes('LEGENDARY') ? 'LEGENDARY' : pet.rarities?.[0] || 'COMMON'
   );

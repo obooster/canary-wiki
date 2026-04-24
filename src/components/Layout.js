@@ -6,6 +6,8 @@ import {
   Menu, X, Search, ExternalLink, ChevronRight
 } from 'lucide-react';
 
+import LOGO from '../icon.png'
+
 const NAV_ITEMS = [
   { path: '/', label: 'Início', icon: Home, testId: 'nav-link-home' },
   { path: '/getting-started', label: 'Guia de Início', icon: Map, testId: 'nav-link-guide' },
@@ -18,9 +20,6 @@ const NAV_ITEMS = [
   { path: '/rules', label: 'Regras', icon: ScrollText, testId: 'nav-link-rules' },
   { path: '/tier-lists', label: 'Tier Lists', icon: Trophy, testId: 'nav-link-tierlists' },
 ];
-
-const LOGO_URL =
-  "https://customer-assets.emergentagent.com/job_canary-hypixel-home/artifacts/tklmbq9t_generated-image-removebg-preview.png";
 
 function NavLink({ item, active, onClick }) {
   const Icon = item.icon;
@@ -65,7 +64,7 @@ export default function Layout({ children }) {
         onClick={onLinkClick}
         className="flex items-center gap-3 px-4 py-5 border-b border-[#333]"
       >
-        <img src={LOGO_URL} alt="RedeCanary" className="w-9 h-9 object-contain" />
+        <img src={LOGO} alt="RedeCanary" className="w-9 h-9 object-contain" />
         <div>
           <p className="font-pixel text-[#FFAA00] text-sm leading-tight">Canary</p>
           <p className="text-[#777] text-xs">Wiki</p>
@@ -148,9 +147,9 @@ export default function Layout({ children }) {
           </button>
 
           <Link to="/" className="flex items-center gap-2 lg:hidden">
-            <img src={LOGO_URL} className="w-7 h-7 object-contain" />
+            <img src={LOGO} className="w-7 h-7 object-contain"  alt="Canary"/>
             <span className="font-pixel text-[#FFAA00] text-sm">
-              RedeCanary Wiki
+              Canary Wiki
             </span>
           </Link>
 

@@ -34,7 +34,6 @@ function AnimatedNumber({ value, duration = 1200 }) {
   const [display, setDisplay] = useState(0);
 
   useEffect(() => {
-    let start = 0;
     const startTime = performance.now();
 
     function easeOutCubic(t) {
@@ -196,7 +195,7 @@ export default function HomePage() {
       <footer className="mt-auto border-t border-[#333] px-4 py-6 text-center">
         <div className="flex items-center justify-center gap-2 mb-2">
           <img src={logo} alt="RedeCanary" className="w-5 h-5 object-contain" />
-          <span className="font-pixel text-[#FFAA00] text-xs">RedeCanary Wiki</span>
+          <span className="font-pixel text-[#FFAA00] text-xs">Canary Wiki</span>
         </div>
         <p className="text-[#555] text-xs">
           Feito pelo booster para a comunidade · redecanary.net

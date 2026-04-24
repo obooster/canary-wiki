@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { Search, X } from 'lucide-react';
 import Layout from '../components/Layout';
-import { RARITY_COLORS } from '../utils/minecraft';
+import { RARITY_COLORS } from '../utils/Minecraft';
 
 const API = `https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/reforges.json`;
 

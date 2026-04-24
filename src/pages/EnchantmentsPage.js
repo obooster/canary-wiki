@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import axios from 'axios';
 import { Search, Sparkles, X, ChevronDown, ChevronUp } from 'lucide-react';
 import Layout from '../components/Layout';
-import { parseMcText } from '../utils/minecraft';
+import { parseMcText } from '../utils/Minecraft';
 
 const API = `https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/enchants.json`;
 
@@ -33,7 +33,7 @@ function McTextSpan({ text }) {
   );
 }
 
-function EnchantCard({ enchKey, ench }) {
+function EnchantCard({ench}) {
   const [expanded, setExpanded] = useState(false);
   const [height, setHeight] = useState(0);
   const contentRef = useRef(null);

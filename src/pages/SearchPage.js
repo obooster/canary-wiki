@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Search, Package, Sparkles, Hammer, BookOpen, Heart, Skull } from 'lucide-react';
 import Layout from '../components/Layout';
-import { RARITY_COLORS, stripMcCodes } from '../utils/minecraft';
+import { RARITY_COLORS, stripMcCodes } from '../utils/Minecraft';
 
 const BASE_URL = "https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/";
 

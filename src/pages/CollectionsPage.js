@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { Search, BookOpen, X, ChevronDown, ChevronUp } from 'lucide-react';
 import Layout from '../components/Layout';
-import { parseMcText, SKILL_LABELS } from '../utils/minecraft';
+import { parseMcText, SKILL_LABELS } from '../utils/Minecraft';
 
 const DATA_URL = "https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/collections.json";
 
@@ -38,7 +38,7 @@ function ItemIcon() {
   );
 }
 
-function CollectionCard({ colKey, col }) {
+function CollectionCard({col}) {
   const [expanded, setExpanded] = useState(false);
   const [height, setHeight] = useState(0);
   const contentRef = useRef(null);
