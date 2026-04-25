@@ -17,6 +17,11 @@ const CATEGORY_LABELS = {
   BELT: 'Cinto',
   BRACELET: 'Bracelete',
   HOE: 'Enxada',
+  HAT: 'Chapéu',
+  HELMET: 'Capacete',
+  CHESTPLATE: 'Peitoral',
+  LEGGINGS: 'Calças',
+  BOOTS: 'Botas'
 };
 
 const ATTR_LABELS = {
@@ -31,7 +36,8 @@ const ATTR_LABELS = {
   MAGIC_DAMAGE: 'Dano mágico',
   BONUS_ATTACK_SPEED: 'Vel. Ataque',
   FARMING_FORTUNE: 'Fort. de Farm',
-  HASTE: 'Pressa'
+  HASTE: 'Pressa',
+  MINING_FORTUNE: 'Fortuna'
 };
 
 function formatStatValue(value) {
@@ -63,69 +69,84 @@ function StatBadge({ stat, value }) {
 }
 
 function ReforgeCard({ refKey, refData }) {
-  const first = Object.values(refData)[0] || {};
-  const name = first.name || refKey;
-  const category = first.category || '';
+  const name = refData.name || refKey;
+  const categories = refData.categories || [];
 
-  const availableRarities = RARITIES.filter(r => refData[r]);
-  const [rarity, setRarity] = useState(availableRarities[0]);
+  const statsByRarity = refData.stats || {};
+  const obtainable = refData.obtainable;
 
-  const current = refData[rarity] || {};
-  const stats = current.stats || {};
+  const availableRarities = RARITIES.filter(r => statsByRarity[r]);
+  const [rarity, setRarity] = useState(availableRarities[0] || null);
 
-  const color = RARITY_COLORS[rarity]?.hex || '#333';
+  const stats = rarity ? statsByRarity[rarity] || {} : {};
+  const color = rarity ? (RARITY_COLORS[rarity]?.hex || '#333') : '#333';
 
   return (
-    <div
-      className="bg-[#1E1E1E] border transition-all duration-200"
-      style={{
-        borderColor: `${color}55`,
-        boxShadow: `0 0 0 1px ${color}33`,
-      }}
-    >
       <div
-        className="px-4 py-3 border-b border-[#2A2A2A] flex justify-between items-center"
-        style={{
-          borderTop: `2px solid ${color}`
-        }}
+          className="bg-[#1E1E1E] border transition-all duration-200"
+          style={{
+            borderColor: `${color}55`,
+            boxShadow: `0 0 0 1px ${color}33`,
+            opacity: obtainable ? 1 : 0.6
+          }}
       >
-        <div>
-          <p className="text-white text-sm font-medium">{name}</p>
-          <span className="text-[10px] text-[#FF5555]">
-            {CATEGORY_LABELS[category] || category}
-          </span>
+        <div
+            className="px-4 py-3 border-b border-[#2A2A2A] flex justify-between items-center"
+            style={{ borderTop: `2px solid ${color}` }}
+        >
+          <div>
+            <p className="text-white text-sm font-medium">{name}</p>
+
+            {/* categorias */}
+            <div className="flex flex-wrap gap-1 mt-1">
+              {categories.map(cat => (
+                  <span
+                      key={cat}
+                      className="text-[10px] px-1.5 py-[1px] bg-[#2A2A2A]"
+                  >
+                {CATEGORY_LABELS[cat] || cat}
+              </span>
+              ))}
+            </div>
+
+            {/* obtainable */}
+            {!obtainable && (
+                <p className="text-[10px] text-[#FF5555] mt-1">
+                  Não obtível
+                </p>
+            )}
+          </div>
+
+          <div className="flex gap-1">
+            {availableRarities.map(r => {
+              const c = RARITY_COLORS[r];
+              return (
+                  <button
+                      key={r}
+                      onClick={() => setRarity(r)}
+                      className="w-4 h-4 transition-all"
+                      style={{
+                        background: c?.hex,
+                        opacity: rarity === r ? 1 : 0.4,
+                        transform: rarity === r ? 'scale(1.1)' : 'scale(1)',
+                        outline: rarity === r ? `2px solid ${c?.hex}` : 'none'
+                      }}
+                  />
+              );
+            })}
+          </div>
         </div>
 
-        <div className="flex gap-1">
-          {availableRarities.map(r => {
-            const c = RARITY_COLORS[r];
-            return (
-              <button
-                key={r}
-                onClick={() => setRarity(r)}
-                className="w-4 h-4 transition-all"
-                style={{
-                  background: c?.hex,
-                  opacity: rarity === r ? 1 : 0.4,
-                  transform: rarity === r ? 'scale(1.1)' : 'scale(1)',
-                  outline: rarity === r ? `2px solid ${c?.hex}` : 'none'
-                }}
-              />
-            );
-          })}
+        <div className="px-4 py-3">
+          {rarity && Object.keys(stats).length > 0 ? (
+              Object.entries(stats).map(([k, v]) => (
+                  <StatBadge key={k} stat={k} value={v} />
+              ))
+          ) : (
+              <p className="text-[#555] text-xs">Sem bônus para essa raridade</p>
+          )}
         </div>
       </div>
-
-      <div className="px-4 py-3">
-        {Object.keys(stats).length > 0 ? (
-          Object.entries(stats).map(([k, v]) => (
-            <StatBadge key={k} stat={k} value={v} />
-          ))
-        ) : (
-          <p className="text-[#555] text-xs">Sem bônus para essa raridade</p>
-        )}
-      </div>
-    </div>
   );
 }
 
@@ -142,24 +163,34 @@ export default function ReforgePage() {
 
   const categories = useMemo(() => {
     const set = new Set();
+
     Object.values(reforges).forEach(r => {
-      const first = Object.values(r)[0];
-      if (first?.category) set.add(first.category);
+      (r.categories || []).forEach(cat => set.add(cat));
     });
+
     return [...set];
   }, [reforges]);
 
   const filtered = useMemo(() => {
-    return Object.entries(reforges).filter(([, data]) => {
-      const first = Object.values(data)[0] || {};
-      const name = first.name || '';
-      const cat = first.category || '';
+    return Object.entries(reforges)
+        .filter(([, data]) => {
+          const name = data.name || '';
+          const categories = data.categories || [];
 
-      return (
-        (!search || name.toLowerCase().includes(search.toLowerCase())) &&
-        (!catFilter || cat === catFilter)
-      );
-    });
+          return (
+              (!search || name.toLowerCase().includes(search.toLowerCase())) &&
+              (!catFilter || categories.includes(catFilter))
+          );
+        })
+        .sort(([, a], [, b]) => {
+          // obtainable primeiro
+          if (a.obtainable !== b.obtainable) {
+            return a.obtainable ? -1 : 1;
+          }
+
+          // opcional: ordenar por nome dentro do grupo
+          return (a.name || '').localeCompare(b.name || '');
+        });
   }, [reforges, search, catFilter]);
 
   return (
@@ -193,6 +224,10 @@ export default function ReforgePage() {
             ))}
           </select>
         </div>
+
+        <p className="text-[#777] text-xs mb-4">
+          {filtered.length} reforj{filtered.length !== 1 ? 'as' : 'a'} encontrada{filtered.length !== 1 ? 's' : ''}
+        </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {filtered.map(([k, v]) => (

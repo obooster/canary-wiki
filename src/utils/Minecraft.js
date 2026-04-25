@@ -10,7 +10,8 @@ export const ATTR_LABELS = {
   STRENGTH: { label: 'Força', color: '#FF5555' },
   MAX_INTELLIGENCE: { label: 'Inteligência Máxima', color: '#55FFFF' },
   HASTE: { label: 'Pressa', color: '#55FFFF' },
-  BONUS_ATTACK_SPEED: { label: 'Vel. Ataque', color: '#3cff46' }
+  BONUS_ATTACK_SPEED: { label: 'Vel. Ataque', color: '#3cff46' },
+  MAGIC_DAMAGE: { label: 'Dano mágico', color: '#80eeff' },
 };
 
 export const SKILL_LABELS = {

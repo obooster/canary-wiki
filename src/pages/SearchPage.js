@@ -92,14 +92,11 @@ export default function SearchPage() {
             category: 'enchantments'
           })),
 
-          ...Object.entries(reforges).map(([key, ref]) => {
-            const first = Object.values(ref)[0] || {};
-            return {
-              key,
-              name: first.name || key,
-              category: 'reforges'
-            };
-          }),
+          ...Object.entries(reforges).map(([key, ref]) => ({
+            key,
+            name: ref.name || key,
+            category: 'reforges'
+          })),
 
           ...Object.entries(collections).map(([key, col]) => ({
             key,

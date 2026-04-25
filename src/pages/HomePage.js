@@ -19,10 +19,10 @@ const CATEGORIES = [
 ];
 
 const STATS = [
-  { label: 'Itens', value: '600+' },
-  { label: 'Encantamentos', value: '60+' },
+  { label: 'Itens', value: '550+' },
+  { label: 'Encantamentos', value: '70+' },
   { label: 'Pets', value: '10+' },
-  { label: 'Entidades', value: '40+' },
+  { label: 'Entidades', value: '60+' },
   { label: 'Reforjas', value: '70+' },
   { label: 'Coleções', value: '40+' }
 ];
