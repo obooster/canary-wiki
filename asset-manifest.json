@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/canary-wiki/static/css/main.20e9799a.css",
-    "main.js": "/canary-wiki/static/js/main.b607a9a4.js",
+    "main.js": "/canary-wiki/static/js/main.d2623052.js",
     "static/media/background.png": "/canary-wiki/static/media/background.4d366a4093e384102fac.png",
     "static/media/icon.png": "/canary-wiki/static/media/icon.7498a17c82d1f4947fd9.png",
     "index.html": "/canary-wiki/index.html",
     "main.20e9799a.css.map": "/canary-wiki/static/css/main.20e9799a.css.map",
-    "main.b607a9a4.js.map": "/canary-wiki/static/js/main.b607a9a4.js.map"
+    "main.d2623052.js.map": "/canary-wiki/static/js/main.d2623052.js.map"
   },
   "entrypoints": [
     "static/css/main.20e9799a.css",
-    "static/js/main.b607a9a4.js"
+    "static/js/main.d2623052.js"
   ]
 }
