@@ -24,6 +24,8 @@ const CATEGORY_LABELS = {
   ACCESSORY: 'Acessório',
   WAND: 'Varinha',
 
+  BAIT: 'Isca',
+
   ARMOR: 'Armadura',
 
   BELT: 'Cinto',
