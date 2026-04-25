@@ -30,11 +30,11 @@ function ProgressBar({ value, max }) {
   );
 }
 
-function ItemIcon() {
+function ItemIcon({}) {
   return (
-    <div className="w-8 h-8 flex items-center justify-center bg-[#252525] border border-[#333] overflow-hidden">
-      <span className="text-lg">📦</span>
-    </div>
+      <div className="w-8 h-8 bg-[#252525] border border-[#333] overflow-hidden">
+        <span className="text-lg">📦</span>
+      </div>
   );
 }
 
@@ -64,7 +64,7 @@ function CollectionCard({col}) {
       >
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 flex items-center justify-center bg-[#252525] border border-[#333] text-lg">
-            <ItemIcon />
+            <ItemIcon itemId={col.material} />
           </div>
 
           <div>

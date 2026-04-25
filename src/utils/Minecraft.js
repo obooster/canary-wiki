@@ -19,6 +19,7 @@ export const SKILL_LABELS = {
   FARMING_SKILL: { label: 'Agricultura', color: '#55FF55' },
   MINING_SKILL: { label: 'Mineração', color: '#AAAAAA' },
   FORAGING_SKILL: { label: 'Lenha', color: '#FFAA00' },
+  FISHING_SKILL: { label: 'Pesca', color: '#70ffdc' },
 };
 
 export const RARITY_COLORS = {
