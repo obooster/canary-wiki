@@ -43,6 +43,8 @@ function PetCard({pet}) {
   const [height, setHeight] = useState(0);
   const contentRef = useRef(null);
 
+  const notObtainable = pet.name === 'Ship' || pet.rarities[0] === 'SPECIAL'
+
   const skill = SKILL_LABELS[pet.skill] || { label: pet.skill, color: '#AAAAAA' };
   const rarityData = pet.attributes?.[selectedRarity];
   const rc = RARITY_COLORS[selectedRarity] || RARITY_COLORS.COMMON;
@@ -71,8 +73,11 @@ function PetCard({pet}) {
   }, [expanded]);
 
   return (
-    <div className="bg-[#1E1E1E] border border-[#333] hover:border-[#FF55FF33] transition-colors flex flex-col h-full">
-      
+    <div className="bg-[#1E1E1E] border border-[#333] hover:border-[#FF55FF33] transition-colors flex flex-col h-full"
+         style={{
+           opacity: notObtainable ? 0.6 : 1
+         }}>
+
       {/* CONTEÚDO PRINCIPAL */}
       <div className="p-4 flex-1 flex flex-col">
         <div className="flex items-start gap-3">
@@ -86,6 +91,8 @@ function PetCard({pet}) {
               {pet.name}
             </p>
 
+
+
             <div className="flex items-center gap-2 mt-1">
               <span
                 className="text-[10px] px-1.5 py-0.5"
@@ -93,6 +100,12 @@ function PetCard({pet}) {
               >
                 {skill.label}
               </span>
+
+              {notObtainable && (
+                  <p className="text-[10px] text-[#FF5555] mt-1">
+                    Não obtível
+                  </p>
+              )}
             </div>
 
             <div className="flex gap-1 mt-2">
@@ -113,6 +126,7 @@ function PetCard({pet}) {
                 );
               })}
             </div>
+
           </div>
         </div>
 
@@ -133,6 +147,9 @@ function PetCard({pet}) {
             })}
           </div>
         )}
+
+
+
       </div>
 
       {/* XP */}
@@ -196,8 +213,10 @@ export default function PetsPage() {
     [pets]
   );
 
+
   const filtered = useMemo(() => {
-    return Object.entries(pets).filter(([, pet]) => {
+    return Object.entries(pets)
+        .filter(([, pet]) => {
       const matchSearch =
         !search || pet.name?.toLowerCase().includes(search.toLowerCase());
       const matchSkill =
@@ -206,7 +225,14 @@ export default function PetsPage() {
         !rarityFilter || (pet.rarities || []).includes(rarityFilter);
 
       return matchSearch && matchSkill && matchRarity;
-    });
+    }).sort(([, a], [, b]) => {
+          const firstNotObtainable = a.name === 'Ship' || a.rarities[0] === 'SPECIAL'
+          const secondNotObtainable = b.name === 'Ship' || b.rarities[0] === 'SPECIAL'
+
+        if (firstNotObtainable !== secondNotObtainable) {
+          return firstNotObtainable ? 1 : -1
+        }
+    })
   }, [pets, search, skillFilter, rarityFilter]);
 
   return (

@@ -12,6 +12,9 @@ export const ATTR_LABELS = {
   HASTE: { label: 'Pressa', color: '#55FFFF' },
   BONUS_ATTACK_SPEED: { label: 'Vel. Ataque', color: '#3cff46' },
   MAGIC_DAMAGE: { label: 'Dano mágico', color: '#80eeff' },
+  SEA_CREATURE_CHANCE: { label: 'Chance de Criaturas Marinhas', color: '#80eeff'},
+  MINING_FORTUNE: { label: 'Fortuna', color: '#71ff83' },
+  SWING_RANGE: { label: 'Alcance de ataque', color: '#FF5555'}
 };
 
 export const SKILL_LABELS = {

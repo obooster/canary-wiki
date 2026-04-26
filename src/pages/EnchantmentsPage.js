@@ -33,7 +33,7 @@ function McTextSpan({ text }) {
   );
 }
 
-function EnchantCard({ench}) {
+function EnchantCard({ench, enchs}) {
   const [expanded, setExpanded] = useState(false);
   const [height, setHeight] = useState(0);
   const contentRef = useRef(null);
@@ -43,6 +43,7 @@ function EnchantCard({ench}) {
   const expCosts = extra.expCosts || {};
   const sellPrices = extra.sellPrices || {};
   const targets = extra.targets || [];
+  const conflicts = extra.conflicts || []
 
   useEffect(() => {
     if (expanded) {
@@ -154,19 +155,35 @@ function EnchantCard({ench}) {
             </div>
           )}
 
-          {/* TARGETS */}
+          {/* TARGETS + CONFLICTS */}
           <div>
             <p className="text-[#777] text-xs uppercase tracking-wider mb-2">
               Aplicável em
             </p>
 
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1 mb-2">
               {targets.map(t => (
-                <span key={t} className="text-xs text-[#5555FF] bg-[#5555FF18] border border-[#5555FF33] px-2 py-0.5">
-                  {TARGET_LABELS[t] || t}
-                </span>
+                  <span key={t} className="text-xs text-[#5555FF] bg-[#5555FF18] border border-[#5555FF33] px-2 py-0.5 mb-2">
+                    {TARGET_LABELS[t] || t}
+                  </span>
               ))}
             </div>
+
+            {conflicts.length > 0 && (
+                <>
+                  <p className="text-[#777] text-xs uppercase tracking-wider mb-2">
+                    Conflitos
+                  </p>
+
+                  <div className="flex flex-wrap gap-1">
+                    {conflicts.map(c => (
+                        <span key={c} className="text-xs text-[#FF5555] bg-[#FF555518] border border-[#FF555533] px-2 py-0.5">
+                            {enchs[c].name || c}
+                        </span>
+                    ))}
+                  </div>
+                </>
+            )}
           </div>
 
           {!ench.allowedInEnchantTable && (
@@ -254,7 +271,7 @@ export default function EnchantmentsPage() {
         ) : (
           <div className="space-y-2">
             {filtered.map(([key, ench]) => (
-              <EnchantCard key={key} enchKey={key} ench={ench} />
+              <EnchantCard key={key} enchKey={key} ench={ench} enchs={enchants} />
             ))}
           </div>
         )}
