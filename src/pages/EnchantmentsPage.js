@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
-import axios from 'axios';
+import { useState, useEffect, useMemo, useRef, memo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Search, Sparkles, X, ChevronDown, ChevronUp } from 'lucide-react';
 import Layout from '../components/Layout';
 import { parseMcText } from '../utils/Minecraft';
-
-const API = `https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/enchants.json`;
+import { useGameData } from '../hooks/useGameData';
+import { useDebounce } from '../hooks/useDebounce';
 
 const TARGET_LABELS = {
   SWORD: 'Espada', BOW: 'Arco', PICKAXE: 'Picareta', AXE: 'Machado',
@@ -33,7 +33,7 @@ function McTextSpan({ text }) {
   );
 }
 
-function EnchantCard({ench, enchs}) {
+const EnchantCard = memo(function EnchantCard({ench, enchs}) {
   const [expanded, setExpanded] = useState(false);
   const [height, setHeight] = useState(0);
   const contentRef = useRef(null);
@@ -196,22 +196,21 @@ function EnchantCard({ench, enchs}) {
       </div>
     </div>
   );
-}
+});
 
 export default function EnchantmentsPage() {
-  const [enchants, setEnchants] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [targetFilter, setTargetFilter] = useState('');
+  const [searchParams] = useSearchParams();
+  const qParam = searchParams.get('q') || '';
 
-  useEffect(() => {
-    axios.get(API)
-      .then(r => setEnchants(r.data))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
+  const { data: enchants, loading } = useGameData('enchantments');
+  const [search, setSearch] = useState(qParam);
+  const [targetFilter, setTargetFilter] = useState('');
+  const [page, setPage] = useState(0);
+  const debouncedSearch = useDebounce(search, 300);
+  const ITEMS_PER_PAGE = 24;
 
   const allTargets = useMemo(() => {
+    if (!enchants) return [];
     const set = new Set();
     Object.values(enchants).forEach(e =>
       (e.extra?.targets || []).forEach(t => set.add(t))
@@ -220,12 +219,23 @@ export default function EnchantmentsPage() {
   }, [enchants]);
 
   const filtered = useMemo(() => {
+    if (!enchants) return [];
     return Object.entries(enchants).filter(([, e]) => {
-      const matchSearch = !search || e.name?.toLowerCase().includes(search.toLowerCase());
+      const matchSearch = !debouncedSearch || e.name?.toLowerCase().includes(debouncedSearch.toLowerCase());
       const matchTarget = !targetFilter || (e.extra?.targets || []).includes(targetFilter);
       return matchSearch && matchTarget;
     });
-  }, [enchants, search, targetFilter]);
+  }, [enchants, debouncedSearch, targetFilter]);
+
+  const paginatedItems = useMemo(() => {
+    if (!filtered.length) return [];
+    const start = page * ITEMS_PER_PAGE;
+    return filtered.slice(start, start + ITEMS_PER_PAGE);
+  }, [filtered, page]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [debouncedSearch, targetFilter]);
 
   return (
     <Layout>
@@ -266,14 +276,42 @@ export default function EnchantmentsPage() {
           </select>
         </div>
 
+        <p className="text-[#777] text-xs mb-4">
+          {filtered.length} encantamento{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
+        </p>
+
         {loading ? (
           <div>Loading...</div>
         ) : (
-          <div className="space-y-2">
-            {filtered.map(([key, ench]) => (
-              <EnchantCard key={key} enchKey={key} ench={ench} enchs={enchants} />
-            ))}
-          </div>
+          <>
+            <div className="space-y-2">
+              {paginatedItems.map(([key, ench]) => (
+                <EnchantCard key={key} enchKey={key} ench={ench} enchs={enchants} />
+              ))}
+            </div>
+
+            {filtered.length > ITEMS_PER_PAGE && (
+              <div className="flex justify-center items-center gap-2 mt-6">
+                <button
+                  onClick={() => setPage(p => Math.max(0, p - 1))}
+                  disabled={page === 0}
+                  className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+                >
+                  Anterior
+                </button>
+                <span className="text-[#777] text-sm">
+                  {page * ITEMS_PER_PAGE + 1}-{Math.min((page + 1) * ITEMS_PER_PAGE, filtered.length)} de {filtered.length}
+                </span>
+                <button
+                  onClick={() => setPage(p => p + 1)}
+                  disabled={(page + 1) * ITEMS_PER_PAGE >= filtered.length}
+                  className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+                >
+                  Proximo
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </Layout>

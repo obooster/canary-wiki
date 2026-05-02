@@ -1,19 +1,34 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
 import { Search, Package, Sparkles, Hammer, BookOpen, Heart, Skull, Map, ScrollText, Trophy, ExternalLink, ChevronRight } from 'lucide-react';
 import Layout from '../components/Layout';
 
 import background from '../background.png'
 import logo from '../icon.png'
 
+const API_ENDPOINTS = {
+  items: 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/items.json',
+  enchantments: 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/enchants.json',
+  reforges: 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/reforges.json',
+  pets: 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/pets.json',
+  entities: 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/entities.json',
+  collections: 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/collections.json',
+};
+
+function preloadData(endpoint) {
+  if (!API_ENDPOINTS[endpoint]) return;
+  axios.get(API_ENDPOINTS[endpoint]).catch(() => {});
+}
+
 const CATEGORIES = [
   { path: '/getting-started', label: 'Guia de Início', icon: Map, desc: 'Como começar no servidor', color: '#55FF55', testId: 'category-card-guide' },
-  { path: '/items', label: 'Itens', icon: Package, desc: 'Armas, armaduras e acessórios', color: '#5555FF', testId: 'category-card-items' },
-  { path: '/enchantments', label: 'Encantamentos', icon: Sparkles, desc: 'Todos os encantamentos do server', color: '#AA00AA', testId: 'category-card-enchantments' },
-  { path: '/reforges', label: 'Reforjas', icon: Hammer, desc: 'Reforjas e bônus de status', color: '#FF5555', testId: 'category-card-reforges' },
-  { path: '/collections', label: 'Coleções', icon: BookOpen, desc: 'Coleções e recompensas', color: '#55FF55', testId: 'category-card-collections' },
-  { path: '/pets', label: 'Pets', icon: Heart, desc: 'Pets e habilidades', color: '#FF55FF', testId: 'category-card-pets' },
-  { path: '/entities', label: 'Entidades', icon: Skull, desc: 'Mobs, chefes e drops', color: '#FF5555', testId: 'category-card-entities' },
+  { path: '/items', label: 'Itens', icon: Package, desc: 'Armas, armaduras e acessórios', color: '#5555FF', testId: 'category-card-items', preload: 'items' },
+  { path: '/enchantments', label: 'Encantamentos', icon: Sparkles, desc: 'Todos os encantamentos do server', color: '#AA00AA', testId: 'category-card-enchantments', preload: 'enchantments' },
+  { path: '/reforges', label: 'Reforjas', icon: Hammer, desc: 'Reforjas e bônus de status', color: '#FF5555', testId: 'category-card-reforges', preload: 'reforges' },
+  { path: '/collections', label: 'Coleções', icon: BookOpen, desc: 'Coleções e recompensas', color: '#55FF55', testId: 'category-card-collections', preload: 'collections' },
+  { path: '/pets', label: 'Pets', icon: Heart, desc: 'Pets e habilidades', color: '#FF55FF', testId: 'category-card-pets', preload: 'pets' },
+  { path: '/entities', label: 'Entidades', icon: Skull, desc: 'Mobs, chefes e drops', color: '#FF5555', testId: 'category-card-entities', preload: 'entities' },
   { path: '/tier-lists', label: 'Tier Lists', icon: Trophy, desc: 'Rankings de itens e pets', color: '#FFAA00', testId: 'category-card-tierlists' },
   { path: '/rules', label: 'Regras', icon: ScrollText, desc: 'Regras do servidor', color: '#AAAAAA', testId: 'category-card-rules' },
 ];
@@ -166,6 +181,7 @@ export default function HomePage() {
                   key={cat.path}
                   to={cat.path}
                   data-testid={cat.testId}
+                  onMouseEnter={() => cat.preload && preloadData(cat.preload)}
                   className="group flex items-start gap-4 p-4 bg-[#1E1E1E] border border-[#333] hover:border-[#555] hover:bg-[#252525] transition-all duration-150 relative overflow-hidden"
                 >
                   <div

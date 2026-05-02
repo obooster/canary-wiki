@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Search, BookOpen, X, ChevronDown, ChevronUp } from 'lucide-react';
 import Layout from '../components/Layout';
 import { parseMcText, SKILL_LABELS } from '../utils/Minecraft';
-
-const DATA_URL = "https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/collections.json";
+import { useGameData } from '../hooks/useGameData';
+import { useDebounce } from '../hooks/useDebounce';
 
 function McLine({ text }) {
   const parts = parseMcText(text);
@@ -149,30 +150,27 @@ function CollectionCard({col}) {
 }
 
 export default function CollectionsPage() {
-  const [collections, setCollections] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [skillFilter, setSkillFilter] = useState('');
+  const [searchParams] = useSearchParams();
+  const qParam = searchParams.get('q') || '';
 
-  useEffect(() => {
-    fetch(DATA_URL)
-      .then(r => r.json())
-      .then(data => setCollections(data))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
+  const { data: collections, loading } = useGameData('collections');
+  const [search, setSearch] = useState(qParam);
+  const [skillFilter, setSkillFilter] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
 
   const skillTypes = useMemo(() => {
+    if (!collections) return [];
     return [...new Set(Object.values(collections).map(c => c.skillType))];
   }, [collections]);
 
   const filtered = useMemo(() => {
+    if (!collections) return [];
     return Object.entries(collections).filter(([, col]) => {
-      const matchSearch = !search || col.name?.toLowerCase().includes(search.toLowerCase());
+      const matchSearch = !debouncedSearch || col.name?.toLowerCase().includes(debouncedSearch.toLowerCase());
       const matchSkill = !skillFilter || col.skillType === skillFilter;
       return matchSearch && matchSkill;
     });
-  }, [collections, search, skillFilter]);
+  }, [collections, debouncedSearch, skillFilter]);
 
   const grouped = useMemo(() => {
     const groups = {};

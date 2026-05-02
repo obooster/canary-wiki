@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import {
   Home, Package, Sparkles, Hammer, BookOpen,
   Heart, Skull, Map, ScrollText, Trophy,
@@ -11,15 +12,29 @@ import LOGO from '../icon.png'
 const NAV_ITEMS = [
   { path: '/', label: 'Início', icon: Home, testId: 'nav-link-home' },
   { path: '/getting-started', label: 'Guia de Início', icon: Map, testId: 'nav-link-guide' },
-  { path: '/items', label: 'Itens', icon: Package, testId: 'nav-link-items' },
-  { path: '/enchantments', label: 'Encantamentos', icon: Sparkles, testId: 'nav-link-enchantments' },
-  { path: '/reforges', label: 'Reforjas', icon: Hammer, testId: 'nav-link-reforges' },
-  { path: '/collections', label: 'Coleções', icon: BookOpen, testId: 'nav-link-collections' },
-  { path: '/pets', label: 'Pets', icon: Heart, testId: 'nav-link-pets' },
-  { path: '/entities', label: 'Entidades', icon: Skull, testId: 'nav-link-entities' },
+  { path: '/items', label: 'Itens', icon: Package, testId: 'nav-link-items', preload: 'items' },
+  { path: '/enchantments', label: 'Encantamentos', icon: Sparkles, testId: 'nav-link-enchantments', preload: 'enchantments' },
+  { path: '/reforges', label: 'Reforjas', icon: Hammer, testId: 'nav-link-reforges', preload: 'reforges' },
+  { path: '/collections', label: 'Coleções', icon: BookOpen, testId: 'nav-link-collections', preload: 'collections' },
+  { path: '/pets', label: 'Pets', icon: Heart, testId: 'nav-link-pets', preload: 'pets' },
+  { path: '/entities', label: 'Entidades', icon: Skull, testId: 'nav-link-entities', preload: 'entities' },
   { path: '/rules', label: 'Regras', icon: ScrollText, testId: 'nav-link-rules' },
   { path: '/tier-lists', label: 'Tier Lists', icon: Trophy, testId: 'nav-link-tierlists' },
 ];
+
+const API_ENDPOINTS = {
+  items: 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/items.json',
+  enchantments: 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/enchants.json',
+  reforges: 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/reforges.json',
+  pets: 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/pets.json',
+  entities: 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/entities.json',
+  collections: 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/collections.json',
+};
+
+function preloadData(endpoint) {
+  if (!API_ENDPOINTS[endpoint]) return;
+  axios.get(API_ENDPOINTS[endpoint]).catch(() => {});
+}
 
 function NavLink({ item, active, onClick }) {
   const Icon = item.icon;
@@ -29,6 +44,7 @@ function NavLink({ item, active, onClick }) {
       to={item.path}
       data-testid={item.testId}
       onClick={onClick}
+      onMouseEnter={() => item.preload && preloadData(item.preload)}
       className={`flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-all duration-200 ease-in-out group relative
         ${active
           ? 'text-[#FFAA00] bg-[#FFAA00]/10 border-l-2 border-[#FFAA00]'

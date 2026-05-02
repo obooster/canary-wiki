@@ -57,15 +57,29 @@ export function formatNumber(n) {
   return Number(n || 0).toLocaleString();
 }
 
+const headCache = new Map();
+
 export function getHead(textureBase64) {
+  if (!textureBase64) return null;
+
+  if (headCache.has(textureBase64)) {
+    return headCache.get(textureBase64);
+  }
+
   try {
     const json = JSON.parse(atob(textureBase64));
     const url = json.textures?.SKIN?.url;
-    if (!url) return null;
+    if (!url) {
+      headCache.set(textureBase64, null);
+      return null;
+    }
 
     const hash = url.split('/').pop();
-    return `https://mc-heads.net/head/${hash}`;
+    const result = `https://mc-heads.net/head/${hash}`;
+    headCache.set(textureBase64, result);
+    return result;
   } catch {
+    headCache.set(textureBase64, null);
     return null;
   }
 }

@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
+import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
 import Layout from '../components/Layout';
 import { RARITY_COLORS, rarities as RARITIES } from '../utils/Minecraft';
-
-const API = `https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/reforges.json`;
+import { useGameData } from '../hooks/useGameData';
+import { useDebounce } from '../hooks/useDebounce';
 
 const CATEGORY_LABELS = {
   SWORD: 'Espada',
@@ -151,17 +151,18 @@ function ReforgeCard({ refKey, refData }) {
 }
 
 export default function ReforgePage() {
-  const [reforges, setReforges] = useState({});
-  const [search, setSearch] = useState('');
-  const [catFilter, setCatFilter] = useState('');
+  const [searchParams] = useSearchParams();
+  const qParam = searchParams.get('q') || '';
 
-  useEffect(() => {
-    axios.get(API)
-      .then(r => setReforges(r.data))
-      .catch(console.error);
-  }, []);
+  const { data: reforges } = useGameData('reforges');
+  const [search, setSearch] = useState(qParam);
+  const [catFilter, setCatFilter] = useState('');
+  const [page, setPage] = useState(0);
+  const debouncedSearch = useDebounce(search, 300);
+  const ITEMS_PER_PAGE = 24;
 
   const categories = useMemo(() => {
+    if (!reforges) return [];
     const set = new Set();
 
     Object.values(reforges).forEach(r => {
@@ -172,6 +173,7 @@ export default function ReforgePage() {
   }, [reforges]);
 
   const filtered = useMemo(() => {
+    if (!reforges) return [];
     return Object.entries(reforges)
         .filter(([, data]) => {
           const name = data.name || '';
@@ -191,7 +193,17 @@ export default function ReforgePage() {
           // opcional: ordenar por nome dentro do grupo
           return (a.name || '').localeCompare(b.name || '');
         });
-  }, [reforges, search, catFilter]);
+  }, [reforges, debouncedSearch, catFilter]);
+
+  const paginatedItems = useMemo(() => {
+    if (!filtered.length) return [];
+    const start = page * ITEMS_PER_PAGE;
+    return filtered.slice(start, start + ITEMS_PER_PAGE);
+  }, [filtered, page]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [debouncedSearch, catFilter]);
 
   return (
     <Layout>
@@ -229,11 +241,33 @@ export default function ReforgePage() {
           {filtered.length} reforj{filtered.length !== 1 ? 'as' : 'a'} encontrada{filtered.length !== 1 ? 's' : ''}
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {filtered.map(([k, v]) => (
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {paginatedItems.map(([k, v]) => (
             <ReforgeCard key={k} refKey={k} refData={v} />
           ))}
         </div>
+
+        {filtered.length > ITEMS_PER_PAGE && (
+          <div className="flex justify-center items-center gap-2 mt-6">
+            <button
+              onClick={() => setPage(p => Math.max(0, p - 1))}
+              disabled={page === 0}
+              className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+            >
+              Anterior
+            </button>
+            <span className="text-[#777] text-sm">
+              {page * ITEMS_PER_PAGE + 1}-{Math.min((page + 1) * ITEMS_PER_PAGE, filtered.length)} de {filtered.length}
+            </span>
+            <button
+              onClick={() => setPage(p => p + 1)}
+              disabled={(page + 1) * ITEMS_PER_PAGE >= filtered.length}
+              className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+            >
+              Proximo
+            </button>
+          </div>
+        )}
 
       </div>
     </Layout>

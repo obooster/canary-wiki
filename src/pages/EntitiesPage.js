@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
+import { useSearchParams } from 'react-router-dom';
 import { Search, Skull, X, Shield, Swords, Zap } from 'lucide-react';
 import Layout from '../components/Layout';
 import { stripMcCodes, parseMcText, formatNumber } from '../utils/Minecraft';
-
-const API = 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/entities.json';
+import { useGameData } from '../hooks/useGameData';
+import { useDebounce } from '../hooks/useDebounce';
 
 export const TYPE_ICONS = {
   ZOMBIE: '🧟',
@@ -159,30 +159,39 @@ function EntityCard({ entKey, entity }) {
 }
 
 export default function EntitiesPage() {
-  const [entities, setEntities] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [searchParams] = useSearchParams();
+  const qParam = searchParams.get('q') || '';
+
+  const { data: entities, loading } = useGameData('entities');
+  const [search, setSearch] = useState(qParam);
   const [typeFilter, setTypeFilter] = useState('');
   const [bossOnly, setBossOnly] = useState(false);
+  const [page, setPage] = useState(0);
+  const debouncedSearch = useDebounce(search, 300);
+  const ITEMS_PER_PAGE = 24;
 
-  useEffect(() => {
-    axios.get(API)
-      .then(r => setEntities(r.data))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
-
-  const types = useMemo(() => [...new Set(Object.values(entities).map(e => e.type))], [entities]);
+  const types = useMemo(() => entities ? [...new Set(Object.values(entities).map(e => e.type))] : [], [entities]);
 
   const filtered = useMemo(() => {
+    if (!entities) return [];
     return Object.entries(entities).filter(([, entity]) => {
       const name = stripMcCodes(entity.name);
-      const matchSearch = !search || name.toLowerCase().includes(search.toLowerCase());
+      const matchSearch = !debouncedSearch || name.toLowerCase().includes(debouncedSearch.toLowerCase());
       const matchType = !typeFilter || entity.type === typeFilter;
       const matchBoss = !bossOnly || entity.attributes?.health >= 1000;
       return matchSearch && matchType && matchBoss;
     }).sort((a, b) => a[1].level - b[1].level);
-  }, [entities, search, typeFilter, bossOnly]);
+  }, [entities, debouncedSearch, typeFilter, bossOnly]);
+
+  const paginatedItems = useMemo(() => {
+    if (!filtered.length) return [];
+    const start = page * ITEMS_PER_PAGE;
+    return filtered.slice(start, start + ITEMS_PER_PAGE);
+  }, [filtered, page]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [debouncedSearch, typeFilter, bossOnly]);
 
   return (
     <Layout>
@@ -233,15 +242,39 @@ export default function EntitiesPage() {
             {[...Array(6)].map((_, i) => <div key={i} className="h-48 bg-[#1E1E1E] border border-[#333] animate-pulse" />)}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" data-testid="entities-grid">
-            {filtered.map(([key, ent]) => <EntityCard key={key} entKey={key} entity={ent} />)}
-            {filtered.length === 0 && (
-              <div className="col-span-3 text-center py-16 text-[#555]">
-                <Skull size={40} className="mx-auto mb-3 opacity-30" />
-                <p>Nenhuma entidade encontrada</p>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" data-testid="entities-grid">
+              {paginatedItems.map(([key, ent]) => <EntityCard key={key} entKey={key} entity={ent} />)}
+              {filtered.length === 0 && (
+                <div className="col-span-3 text-center py-16 text-[#555]">
+                  <Skull size={40} className="mx-auto mb-3 opacity-30" />
+                  <p>Nenhuma entidade encontrada</p>
+                </div>
+              )}
+            </div>
+
+            {filtered.length > ITEMS_PER_PAGE && (
+              <div className="flex justify-center items-center gap-2 mt-6">
+                <button
+                  onClick={() => setPage(p => Math.max(0, p - 1))}
+                  disabled={page === 0}
+                  className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+                >
+                  Anterior
+                </button>
+                <span className="text-[#777] text-sm">
+                  {page * ITEMS_PER_PAGE + 1}-{Math.min((page + 1) * ITEMS_PER_PAGE, filtered.length)} de {filtered.length}
+                </span>
+                <button
+                  onClick={() => setPage(p => p + 1)}
+                  disabled={(page + 1) * ITEMS_PER_PAGE >= filtered.length}
+                  className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+                >
+                  Proximo
+                </button>
               </div>
             )}
-          </div>
+          </>
         )}
       </div>
     </Layout>

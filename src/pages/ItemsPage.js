@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
+import { useState, useMemo, useEffect, memo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Search, Package, X } from 'lucide-react';
 import Layout from '../components/Layout';
 import { RARITY_COLORS, ATTR_LABELS, RARITY_ORDER, rarities, formatNumber } from '../utils/Minecraft';
-
-const API = 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/items.json';
+import { useGameData } from '../hooks/useGameData';
+import { useDebounce } from '../hooks/useDebounce';
 
 const CATEGORY_LABELS = {
   HELMET: 'Capacete',
@@ -51,7 +51,7 @@ function RarityBadge({ rarity }) {
   );
 }
 
-function ItemCard({ itemKey, item, onClick }) {
+const ItemCard = memo(function ItemCard({ itemKey, item, onClick }) {
   const r = RARITY_COLORS[item.rarity] || RARITY_COLORS.COMMON;
   return (
     <button
@@ -79,7 +79,7 @@ function ItemCard({ itemKey, item, onClick }) {
       </div>
     </button>
   );
-}
+});
 
 function ItemModal({ itemKey, item, onClose }) {
   const [visible, setVisible] = useState(false);
@@ -192,29 +192,28 @@ function ItemModal({ itemKey, item, onClose }) {
 }
 
 export default function ItemsPage() {
-  const [items, setItems] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [searchParams] = useSearchParams();
+  const qParam = searchParams.get('q') || '';
+
+  const { data: items, loading } = useGameData('items');
+  const [search, setSearch] = useState(qParam);
   const [rarityFilter, setRarityFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [selected, setSelected] = useState(null);
   const [sortBy, setSortBy] = useState('');
+  const [page, setPage] = useState(0);
+  const debouncedSearch = useDebounce(search, 300);
+  const ITEMS_PER_PAGE = 48;
 
-  useEffect(() => {
-    axios.get(API)
-      .then(r => setItems(r.data))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
-
-  const categories = useMemo(() => [...new Set(Object.values(items).map(i => i.category))].sort(), [items]);
+  const categories = useMemo(() => items ? [...new Set(Object.values(items).map(i => i.category))].sort() : [], [items]);
 
   const filtered = useMemo(() => {
+    if (!items) return [];
     return Object.entries(items)
       .filter(([, item]) => {
         const matchSearch =
-          !search ||
-          item.displayName?.toLowerCase().includes(search.toLowerCase());
+          !debouncedSearch ||
+          item.displayName?.toLowerCase().includes(debouncedSearch.toLowerCase());
 
         const matchRarity =
           !rarityFilter || item.rarity === rarityFilter;
@@ -256,7 +255,17 @@ export default function ItemsPage() {
             return rarityB - rarityA;
         }
       });
-  }, [items, search, rarityFilter, categoryFilter, sortBy]);
+  }, [items, debouncedSearch, rarityFilter, categoryFilter, sortBy]);
+
+  const paginatedItems = useMemo(() => {
+    if (!filtered.length) return [];
+    const start = page * ITEMS_PER_PAGE;
+    return filtered.slice(start, start + ITEMS_PER_PAGE);
+  }, [filtered, page]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [debouncedSearch, rarityFilter, categoryFilter]);
 
   return (
     <Layout>
@@ -320,18 +329,41 @@ export default function ItemsPage() {
               <div key={i} className="h-20 bg-[#1E1E1E] border border-[#333] animate-pulse" />
             ))}
           </div>
+        ) : filtered.length === 0 ? (
+          <div className="text-center py-16 text-[#555]">
+            <Package size={40} className="mx-auto mb-3 opacity-30" />
+            <p>Nenhum item encontrado</p>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" data-testid="items-grid">
-            {filtered.map(([key, item]) => (
-              <ItemCard key={key} itemKey={key} item={item} onClick={() => setSelected({ key, item })} />
-            ))}
-            {filtered.length === 0 && (
-              <div className="col-span-3 text-center py-16 text-[#555]">
-                <Package size={40} className="mx-auto mb-3 opacity-30" />
-                <p>Nenhum item encontrado</p>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" data-testid="items-grid">
+              {paginatedItems.map(([key, item]) => (
+                <ItemCard key={key} itemKey={key} item={item} onClick={() => setSelected({ key, item })} />
+              ))}
+            </div>
+
+            {filtered.length > ITEMS_PER_PAGE && (
+              <div className="flex justify-center items-center gap-2 mt-6">
+                <button
+                  onClick={() => setPage(p => Math.max(0, p - 1))}
+                  disabled={page === 0}
+                  className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+                >
+                  Anterior
+                </button>
+                <span className="text-[#777] text-sm">
+                  {page * ITEMS_PER_PAGE + 1}-{Math.min((page + 1) * ITEMS_PER_PAGE, filtered.length)} de {filtered.length}
+                </span>
+                <button
+                  onClick={() => setPage(p => p + 1)}
+                  disabled={(page + 1) * ITEMS_PER_PAGE >= filtered.length}
+                  className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+                >
+                  Proximo
+                </button>
               </div>
             )}
-          </div>
+          </>
         )}
       </div>
 

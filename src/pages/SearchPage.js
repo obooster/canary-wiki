@@ -3,8 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { Search, Package, Sparkles, Hammer, BookOpen, Heart, Skull } from 'lucide-react';
 import Layout from '../components/Layout';
 import { RARITY_COLORS, stripMcCodes } from '../utils/Minecraft';
-
-const BASE_URL = "https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/";
+import { useSearchData } from '../hooks/useSearchData';
 
 const CAT_CONFIG = {
   items:        { label: 'Itens',          icon: Package,  color: '#5555FF', path: '/items' },
@@ -15,15 +14,16 @@ const CAT_CONFIG = {
   entities:     { label: 'Entidades',      icon: Skull,    color: '#FF5555', path: '/entities' },
 };
 
-function ResultCard({ result }) {
+function ResultCard({ result, searchQuery }) {
   const cat = CAT_CONFIG[result.category] || { label: result.category, color: '#AAAAAA', path: '/' };
   const Icon = cat.icon || Package;
   const rarity = result.item?.rarity;
   const rc = rarity ? RARITY_COLORS[rarity] : null;
+  const targetPath = searchQuery ? `${cat.path}?q=${encodeURIComponent(searchQuery)}` : cat.path;
 
   return (
     <Link
-      to={cat.path}
+      to={targetPath}
       data-testid={`search-result-${result.key.toLowerCase()}`}
       className="flex items-center gap-3 px-4 py-3 bg-[#1E1E1E] border border-[#333] hover:border-[#555] hover:bg-[#252525] transition-all"
     >
@@ -33,7 +33,7 @@ function ResultCard({ result }) {
 
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium truncate" style={{ color: rc?.hex || 'white' }}>
-          {result.name || stripMcCodes(result.name)}
+          {stripMcCodes(result.name)}
         </p>
         <p className="text-[#777] text-xs">{cat.label}</p>
       </div>
@@ -54,95 +54,28 @@ export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const q = searchParams.get('q') || '';
 
-  const [allData, setAllData] = useState([]);
+  const { data: allData, loading } = useSearchData();
   const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [inputVal, setInputVal] = useState(q);
 
   useEffect(() => {
-    async function loadAll() {
-      try {
-        const [
-          items,
-          enchantments,
-          reforges,
-          collections,
-          pets,
-          entities
-        ] = await Promise.all([
-          fetch(`${BASE_URL}/items.json`).then(r => r.json()),
-          fetch(`${BASE_URL}/enchants.json`).then(r => r.json()),
-          fetch(`${BASE_URL}/reforges.json`).then(r => r.json()),
-          fetch(`${BASE_URL}/collections.json`).then(r => r.json()),
-          fetch(`${BASE_URL}/pets.json`).then(r => r.json()),
-          fetch(`${BASE_URL}/entities.json`).then(r => r.json()),
-        ]);
-
-        const normalized = [
-          ...Object.entries(items).map(([key, item]) => ({
-            key,
-            name: item.displayName,
-            category: 'items',
-            item
-          })),
-
-          ...Object.entries(enchantments).map(([key, ench]) => ({
-            key,
-            name: ench.name,
-            category: 'enchantments'
-          })),
-
-          ...Object.entries(reforges).map(([key, ref]) => ({
-            key,
-            name: ref.name || key,
-            category: 'reforges'
-          })),
-
-          ...Object.entries(collections).map(([key, col]) => ({
-            key,
-            name: col.name,
-            category: 'collections'
-          })),
-
-          ...Object.entries(pets).map(([key, pet]) => ({
-            key,
-            name: pet.name,
-            category: 'pets'
-          })),
-
-          ...Object.entries(entities).map(([key, ent]) => ({
-            key,
-            name: ent.name,
-            category: 'entities'
-          })),
-        ];
-
-        setAllData(normalized);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    loadAll();
-  }, []);
+    setInputVal(q);
+  }, [q]);
 
   useEffect(() => {
-    setInputVal(q);
-
-    if (!q.trim()) {
+    if (!inputVal.trim()) {
       setResults([]);
       return;
     }
 
-    setLoading(true);
+    if (!allData.length) return;
 
     const filtered = allData.filter(item =>
-      (item.name || "").toLowerCase().includes(q.toLowerCase())
+      (item.name || "").toLowerCase().includes(inputVal.toLowerCase())
     );
 
     setResults(filtered);
-    setLoading(false);
-  }, [q, allData]);
+  }, [inputVal, allData]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -206,11 +139,11 @@ export default function SearchPage() {
                   {cc.label} ({items.length})
                 </p>
 
-                <div className="space-y-2">
-                  {items.map(r => (
-                    <ResultCard key={`${r.category}-${r.key}`} result={r} />
-                  ))}
-                </div>
+<div className="space-y-2">
+                    {items.map(r => (
+                      <ResultCard key={`${r.category}-${r.key}`} result={r} searchQuery={q} />
+                    ))}
+                  </div>
               </div>
             );
           })}

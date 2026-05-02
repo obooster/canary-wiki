@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import axios from 'axios';
+import { useSearchParams } from 'react-router-dom';
 import { Search, Heart, X, Star } from 'lucide-react';
 import Layout from '../components/Layout';
 import { RARITY_COLORS, SKILL_LABELS, ATTR_LABELS, rarities as RARITIES, getHead } from '../utils/Minecraft';
-
-const API = 'https://raw.githubusercontent.com/RedeCanary/redecanary-requests/main/skyblock/pets.json';
+import { useGameData } from '../hooks/useGameData';
+import { useDebounce } from '../hooks/useDebounce';
 
 
 function PetAvatar({ pet }) {
@@ -195,30 +195,27 @@ function PetCard({pet}) {
 }
 
 export default function PetsPage() {
-  const [pets, setPets] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [searchParams] = useSearchParams();
+  const qParam = searchParams.get('q') || '';
+
+  const { data: pets, loading } = useGameData('pets');
+  const [search, setSearch] = useState(qParam);
   const [skillFilter, setSkillFilter] = useState('');
   const [rarityFilter, setRarityFilter] = useState('');
-
-  useEffect(() => {
-    axios.get(API)
-      .then(r => setPets(r.data))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
+  const debouncedSearch = useDebounce(search, 300);
 
   const skills = useMemo(
-    () => [...new Set(Object.values(pets).map(p => p.skill))],
+    () => pets ? [...new Set(Object.values(pets).map(p => p.skill))] : [],
     [pets]
   );
 
 
   const filtered = useMemo(() => {
+    if (!pets) return [];
     return Object.entries(pets)
         .filter(([, pet]) => {
       const matchSearch =
-        !search || pet.name?.toLowerCase().includes(search.toLowerCase());
+        !debouncedSearch || pet.name?.toLowerCase().includes(debouncedSearch.toLowerCase());
       const matchSkill =
         !skillFilter || pet.skill === skillFilter;
       const matchRarity =
