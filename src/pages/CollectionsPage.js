@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Search, BookOpen, X, ChevronDown, ChevronUp } from 'lucide-react';
 import Layout from '../components/Layout';
 import { parseMcText, SKILL_LABELS } from '../utils/Minecraft';
+import { getTexture } from '../utils/Texture-Finder';
 import { useGameData } from '../hooks/useGameData';
 import { useDebounce } from '../hooks/useDebounce';
 
@@ -31,11 +32,36 @@ function ProgressBar({ value, max }) {
   );
 }
 
-function ItemIcon({}) {
-  return (
-      <div className="w-8 h-8 bg-[#252525] border border-[#333] overflow-hidden">
-        <span className="text-lg">📦</span>
+function ItemIcon({ itemId, metadata = 0 }) {
+  const [imgSrc, setImgSrc] = useState(null);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (!itemId) return;
+    const result = getTexture(itemId, metadata);
+    if (result.success) {
+      setImgSrc(result.url);
+      setError(false);
+    } else {
+      setError(true);
+    }
+  }, [itemId, metadata]);
+
+  if (error || !itemId) {
+    return (
+      <div className="w-8 h-8 bg-[#25FF25] border border-[#333] overflow-hidden flex items-center justify-center text-2lg">
+        ����
       </div>
+    );
+  }
+
+  return (
+    <img
+      src={imgSrc}
+      alt={itemId}
+      className="w-8 h-8 object-cover"
+      onError={() => setError(true)}
+    />
   );
 }
 
@@ -155,7 +181,8 @@ export default function CollectionsPage() {
 
   const { data: collections, loading } = useGameData('collections');
   const [search, setSearch] = useState(qParam);
-  const [skillFilter, setSkillFilter] = useState('');
+  const [skillFilter] = useState('');
+  const [activeCategory, setActiveCategory] = useState(null);
   const debouncedSearch = useDebounce(search, 300);
 
   const skillTypes = useMemo(() => {
@@ -182,6 +209,11 @@ export default function CollectionsPage() {
     return groups;
   }, [filtered]);
 
+  const visibleSkills = useMemo(() => {
+    if (!activeCategory) return skillTypes;
+    return skillTypes.filter(s => s === activeCategory);
+  }, [activeCategory, skillTypes]);
+
   return (
     <Layout>
       <div className="max-w-4xl mx-auto px-4 md:px-8 py-8">
@@ -196,39 +228,53 @@ export default function CollectionsPage() {
           </p>
         </div>
 
-        {/* FILTROS */}
-        <div className="flex flex-wrap gap-3 mb-6">
-
-          <div className="flex items-center gap-2 bg-[#1E1E1E] border border-[#333] px-3 py-2 flex-1 min-w-48">
-            <Search size={14} className="text-[#777]" />
-
-            <input
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Buscar coleção..."
-              className="bg-transparent text-white text-sm outline-none flex-1 placeholder-[#555]"
-            />
-
-            {search && (
-              <button onClick={() => setSearch('')}>
-                <X size={12} className="text-[#777]" />
-              </button>
-            )}
-          </div>
-
-          <select
-            value={skillFilter}
-            onChange={e => setSkillFilter(e.target.value)}
-            className="bg-[#1E1E1E] border border-[#333] text-sm px-3 py-2 text-[#AAAAAA]"
+        {/* BOTOES DE CATEGORIA */}
+        <div className="flex flex-wrap gap-2 mb-6">
+          <button
+            onClick={() => setActiveCategory(null)}
+            className={`px-3 py-1.5 text-sm border transition-colors ${
+              !activeCategory
+                ? 'bg-[#55FF55] border-[#55FF55] text-[#1E1E1E]'
+                : 'bg-[#1E1E1E] border-[#333] text-[#AAA] hover:border-[#55FF55]'
+            }`}
           >
-            <option value="">Todas as habilidades</option>
-            {skillTypes.map(s => (
-              <option key={s} value={s}>
-                {SKILL_LABELS[s]?.label || s}
-              </option>
-            ))}
-          </select>
+            Todas
+          </button>
+          {skillTypes.map(s => {
+            const sk = SKILL_LABELS[s] || { label: s, color: '#AAA' };
+            return (
+              <button
+                key={s}
+                onClick={() => setActiveCategory(activeCategory === s ? null : s)}
+                className={`px-3 py-1.5 text-sm border transition-colors ${
+                  activeCategory === s
+                    ? 'bg-[#55FF55] border-[#55FF55] text-[#1E1E1E]'
+                    : 'bg-[#1E1E1E] border-[#333] text-[#AAA] hover:border-[#55FF55]'
+                }`}
+                style={activeCategory !== s ? { borderColor: sk.color + '44' } : {}}
+              >
+                {sk.label}
+              </button>
+            );
+          })}
+        </div>
 
+        {/* BUSCA */}
+        <div className="flex items-center gap-2 bg-[#1E1E1E] border border-[#333] px-3 py-2 mb-6">
+          <Search size={14} className="text-[#777]" />
+
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Buscar coleção..."
+            className="bg-transparent text-white text-sm outline-none flex-1 placeholder-[#555]"
+          />
+
+          {search && (
+            <button onClick={() => setSearch('')}>
+              <X size={12} className="text-[#777]" />
+            </button>
+          )}
         </div>
 
         {/* LISTA */}
@@ -241,7 +287,9 @@ export default function CollectionsPage() {
         ) : (
           <div className="space-y-8">
 
-            {Object.entries(grouped).map(([skill, cols]) => {
+            {visibleSkills.map(skill => {
+              const cols = grouped[skill] || [];
+              if (cols.length === 0) return null;
               const sk = SKILL_LABELS[skill] || { label: skill, color: '#AAAAAA' };
 
               return (
