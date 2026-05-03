@@ -71,8 +71,8 @@ const ItemCard = memo(function ItemCard({ itemKey, item, onClick }) {
           <p className="text-[#777] text-xs">{CATEGORY_LABELS[item.category] || item.category}</p>
           <div className="mt-1.5 flex items-center gap-2">
             <RarityBadge rarity={item.rarity} />
-            {item.sellPrice > 0 && (
-              <span className="text-[10px] text-[#FFAA00]">{formatNumber(item.sellPrice)} moedas</span>
+            {item.sell > 0 && (
+              <span className="text-[10px] text-[#FFAA00]">{formatNumber(item.sell)} moedas</span>
             )}
           </div>
         </div>
@@ -171,13 +171,13 @@ function ItemModal({ itemKey, item, onClose }) {
             </div>
           )}
 
-          {item.sellPrice > 0 && (
+          {item.sell > 0 && (
             <div className="flex items-center justify-between bg-[#252525] px-3 py-2">
               <span className="text-[#AAAAAA] text-xs">
                 Preço de Venda
               </span>
               <span className="text-[#FFAA00] font-pixel text-sm">
-                {formatNumber(item.sellPrice)} moedas
+                {formatNumber(item.sell)} moedas
               </span>
             </div>
           )}
@@ -195,7 +195,8 @@ export default function ItemsPage() {
   const [searchParams] = useSearchParams();
   const qParam = searchParams.get('q') || '';
 
-  const { data: items, loading } = useGameData('items');
+  const { data: rawData, loading } = useGameData('items');
+  const items = rawData?.items || rawData || {};
   const [search, setSearch] = useState(qParam);
   const [rarityFilter, setRarityFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
@@ -205,11 +206,24 @@ export default function ItemsPage() {
   const debouncedSearch = useDebounce(search, 300);
   const ITEMS_PER_PAGE = 48;
 
-  const categories = useMemo(() => items ? [...new Set(Object.values(items).map(i => i.category))].sort() : [], [items]);
+  const flatItems = useMemo(() => {
+    if (!items) return {};
+    const flat = {};
+    for (const categoryObj of Object.values(items)) {
+      if (categoryObj && typeof categoryObj === 'object') {
+        for (const [key, item] of Object.entries(categoryObj)) {
+          flat[key] = item;
+        }
+      }
+    }
+    return flat;
+  }, [items]);
+
+  const categories = useMemo(() => flatItems ? [...new Set(Object.values(flatItems).map(i => i.category))].sort() : [], [flatItems]);
 
   const filtered = useMemo(() => {
-    if (!items) return [];
-    return Object.entries(items)
+    if (!flatItems) return [];
+    return Object.entries(flatItems)
       .filter(([, item]) => {
         const matchSearch =
           !debouncedSearch ||
@@ -227,8 +241,8 @@ export default function ItemsPage() {
         const A = a[1];
         const B = b[1];
 
-        const priceA = A.sellPrice || 0;
-        const priceB = B.sellPrice || 0;
+        const priceA = A.sell || 0;
+        const priceB = B.sell || 0;
 
         const rarityA = RARITY_ORDER[A.rarity] ?? 0;
         const rarityB = RARITY_ORDER[B.rarity] ?? 0;
@@ -255,7 +269,7 @@ export default function ItemsPage() {
             return rarityB - rarityA;
         }
       });
-  }, [items, debouncedSearch, rarityFilter, categoryFilter, sortBy]);
+  }, [flatItems, debouncedSearch, rarityFilter, categoryFilter, sortBy]);
 
   const paginatedItems = useMemo(() => {
     if (!filtered.length) return [];

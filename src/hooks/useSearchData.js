@@ -14,10 +14,12 @@ const API_ENDPOINTS = {
 };
 
 export function useSearchData() {
-  const { data: items, isLoading: loadingItems } = useSWR(API_ENDPOINTS.items, fetcher, {
+  const { data: rawItems, isLoading: loadingItems } = useSWR(API_ENDPOINTS.items, fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false
   });
+  const items = rawItems?.items || rawItems || {};
+
   const { data: enchantments, isLoading: loadingEnchants } = useSWR(API_ENDPOINTS.enchantments, fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false
@@ -41,11 +43,24 @@ export function useSearchData() {
 
   const loading = loadingItems || loadingEnchants || loadingReforges || loadingCollections || loadingPets || loadingEntities;
 
+  const flatItems = useMemo(() => {
+    if (!items) return {};
+    const flat = {};
+    for (const categoryObj of Object.values(items)) {
+      if (categoryObj && typeof categoryObj === 'object') {
+        for (const [key, item] of Object.entries(categoryObj)) {
+          flat[key] = item;
+        }
+      }
+    }
+    return flat;
+  }, [items]);
+
   const normalized = useMemo(() => {
-    if (loading || !items) return [];
+    if (loading || !flatItems) return [];
 
     return [
-      ...Object.entries(items).map(([key, item]) => ({
+      ...Object.entries(flatItems).map(([key, item]) => ({
         key,
         name: item.displayName,
         category: 'items',
@@ -83,7 +98,7 @@ export function useSearchData() {
         category: 'entities'
       })),
     ];
-  }, [items, enchantments, reforges, collections, pets, entities, loading]);
+  }, [flatItems, enchantments, reforges, collections, pets, entities, loading]);
 
   return { data: normalized, loading };
 }
