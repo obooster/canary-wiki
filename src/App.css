@@ -67,3 +67,27 @@
 .animate-page-fade {
   animation: pageFade 0.3s ease-out;
 }
+
+.mc-glint {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+            -45deg,
+            transparent 0px,
+            transparent 4px,
+            rgb(239, 214, 255, 4) 5px,
+            rgb(221, 180, 255, 6) 7px,
+            rgba(239, 214, 255, 4) 8px,
+            transparent 9px
+    );
+    background-size: 200px 200px;
+    animation: mc-glint 8s linear infinite;
+    mix-blend-mode: screen;
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+@keyframes mc-glint {
+    0%   { background-position: 0 0; }
+    100% { background-position: 200px 200px; }
+}

@@ -59,7 +59,7 @@ function ItemIcon({ itemId, metadata = 0 }) {
     <img
       src={imgSrc}
       alt={itemId}
-      className="w-8 h-8 object-cover"
+      className="w-8 h-8 object-cover [image-rendering:pixelated]"
       onError={() => setError(true)}
     />
   );

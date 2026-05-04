@@ -14,7 +14,9 @@ export const ATTR_LABELS = {
   MAGIC_DAMAGE: { label: 'Dano mágico', color: '#80eeff' },
   SEA_CREATURE_CHANCE: { label: 'Chance de Criaturas Marinhas', color: '#80eeff'},
   MINING_FORTUNE: { label: 'Fortuna', color: '#71ff83' },
-  SWING_RANGE: { label: 'Alcance de ataque', color: '#FF5555'}
+  SWING_RANGE: { label: 'Alcance de ataque', color: '#FF5555'},
+  FISHING_SPEED: { label: 'Velocidade de Pesca', color: '#80eeff'},
+  FISHING_FORTUNE: { label: 'Fortuna de Pesca', color: '#80eeff'}
 };
 
 export const SKILL_LABELS = {
