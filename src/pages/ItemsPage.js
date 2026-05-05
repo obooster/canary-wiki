@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, memo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
 import { Search, Package, X } from 'lucide-react';
@@ -55,7 +55,7 @@ function RarityBadge({ rarity }) {
   );
 }
 
-const ItemCard = memo(function ItemCard({ itemKey, item, onClick }) {
+const ItemCard = ({ itemKey, item, onClick }) => {
   const r = RARITY_COLORS[item.rarity] || RARITY_COLORS.COMMON;
 
   const texture = getTextureWithFallback(item.type, item.durability, item.displayName)
@@ -96,7 +96,9 @@ const ItemCard = memo(function ItemCard({ itemKey, item, onClick }) {
         </div>
       </button>
   );
-});
+};
+
+ItemCard.displayName = 'ItemCard';
 
 function getRecipeGrid(matrix) {
   const grid = [];
@@ -108,80 +110,92 @@ function getRecipeGrid(matrix) {
   return grid;
 }
 
-const RecipeSlot = memo(function RecipeSlot({ slot, setTooltip }) {
+const RecipeSlot = ({ slot, setTooltip, onClick }) => {
   if (!slot || slot.type === 0) {
     return <div className="w-12 h-12 bg-[#111] border border-[#333]" />;
   }
 
   const tex = getTextureWithFallback(slot.type, slot.durability, slot.meta?.displayName);
   const isEnchanted = !!slot.meta?.enchantments && Object.keys(slot.meta.enchantments).length > 0;
-
   const [imgSrc, setImgSrc] = useState(tex.primary || tex.url || tex.fallback);
   const [imgError, setImgError] = useState(false);
+  const rarity = slot.meta?.unhandledTags?.rarity?.data || 'COMMON';
+  const rarityColor = RARITY_COLORS[rarity]?.hex || '#fff';
+  const prevSlotRef = useRef(slot);
+
+  if (prevSlotRef.current !== slot) {
+    prevSlotRef.current = slot;
+    setImgSrc(tex.primary || tex.url || tex.fallback);
+    setImgError(false);
+  }
 
   const handleImageError = (e) => {
     if (tex.fallback && e.currentTarget.src !== tex.fallback) {
       e.currentTarget.src = tex.fallback;
-      setImgSrc(tex.fallback);        // ← importante para o glint
+      setImgSrc(tex.fallback);
     } else {
       setImgError(true);
     }
   };
 
   return (
-      <div className="relative w-12 h-12 bg-[#111] border border-[#333] flex items-center justify-center overflow-hidden"
-           onMouseEnter={e => {
-             if (slot?.meta?.displayName) {
-               const rect = e.currentTarget.getBoundingClientRect();
-               const rarity = slot.meta?.unhandledTags?.rarity?.data || 'COMMON';
-               setTooltip({
-                 text: stripMcCodes(slot.meta.displayName),
-                 x: rect.left + rect.width / 2,
-                 y: rect.top,
-                 rarity,
-               });
-             }
-           }}
-           onMouseLeave={() => setTooltip(null)}
-      >
-        {/* Imagem */}
-        {!imgError ? (
-            <img
-                src={imgSrc}
-                alt=""
-                className="w-8 h-8 [image-rendering:pixelated] relative z-10"
-                onError={handleImageError}
-            />
-        ) : (
-            <Package size={20} style={{ color: RARITY_COLORS[slot.meta?.unhandledTags?.rarity?.data || 'COMMON']?.hex }} />
-        )}
-
-        {/* Glint - usa a mesma imagem que está visível */}
-        {isEnchanted && imgSrc && !imgError && (
-            <div
-                className="mc-glint absolute inset-0 z-20"
-                style={{
-                  WebkitMaskImage: `url(${imgSrc})`,
-                  WebkitMaskSize: '32px 32px',
-                  WebkitMaskRepeat: 'no-repeat',
-                  WebkitMaskPosition: 'center',
-                  maskImage: `url(${imgSrc})`,
-                  maskSize: '32px 32px',
-                  maskRepeat: 'no-repeat',
-                  maskPosition: 'center',
-                }}
-            />
-        )}
-
+    <div
+      className="relative w-12 h-12 bg-[#111] border border-[#333] flex items-center justify-center overflow-hidden"
+      onMouseEnter={e => {
+        if (slot?.meta?.displayName) {
+          const rect = e.currentTarget.getBoundingClientRect();
+          setTooltip({
+            text: stripMcCodes(slot.meta.displayName),
+            x: rect.left + rect.width / 2,
+            y: rect.top,
+            rarity,
+          });
+        }
+      }}
+      onClick={() => {
+        setTooltip(false);
+        onClick();
+      }}
+      onMouseLeave={() => setTooltip(null)}
+    >
+      {!imgError ? (
+        <img
+          src={imgSrc}
+          alt=""
+          className="w-8 h-8 [image-rendering:pixelated] relative z-10"
+          onError={handleImageError}
+        />
+      ) : (
+        <Package size={20} style={{ color: rarityColor }} />
+      )}
+      {isEnchanted && !imgError && imgSrc && (
+        <div
+          className="mc-glint absolute inset-0 z-20"
+          style={{
+            WebkitMaskImage: `url(${imgSrc})`,
+            WebkitMaskSize: '32px 32px',
+            WebkitMaskRepeat: 'no-repeat',
+            WebkitMaskPosition: 'center',
+            maskImage: `url(${imgSrc})`,
+            maskSize: '32px 32px',
+            maskRepeat: 'no-repeat',
+            maskPosition: 'center',
+          }}
+        />
+      )}
+      {slot.amount > 1 && (
         <span className="absolute font-pixel bottom-0 right-1 text-[10px] text-white z-30"
               style={{ textShadow: '-1px -1px 0 #000, 1px 1px 0 #000' }}>
-        {slot.amount}
-      </span>
-      </div>
+          {slot.amount}
+        </span>
+      )}
+    </div>
   );
-});
+};
 
-function ItemModal({ itemKey, item, onClose }) {
+RecipeSlot.displayName = 'RecipeSlot';
+
+const ItemModal = ({ itemKey, item, items, onClose, onSelectItem }) => {
   const [visible, setVisible] = useState(false);
   const [showRecipe, setShowRecipe] = useState(false);
   const [tooltip, setTooltip] = useState(null);
@@ -196,6 +210,12 @@ function ItemModal({ itemKey, item, onClose }) {
     setVisible(false);
     setTimeout(onClose, 200);
   }
+
+  const handleSlotClick = (slot) => {
+    const key = slot.meta?.unhandledTags?.item_type?.data;
+    const clickedItem = items[key];
+    if (clickedItem) onSelectItem({ key, item: clickedItem });
+  };
 
   if (!item) return null;
 
@@ -317,10 +337,11 @@ function ItemModal({ itemKey, item, onClose }) {
               {hasRecipe && (
             <div className="grid grid-cols-3 gap-1 w-max">
               {getRecipeGrid(item.recipe.matrix[0]).flat().map((slot, i) => (
-                  <RecipeSlot
+<RecipeSlot
                       key={i}
                       slot={slot}
                       setTooltip={setTooltip}
+                      onClick={() => handleSlotClick(slot)}
                   />
               ))}
                   </div>)}
@@ -342,7 +363,9 @@ function ItemModal({ itemKey, item, onClose }) {
         </div>
       </div>
   );
-}
+};
+
+ItemModal.displayName = 'ItemModal';
 
 export default function ItemsPage() {
   const [searchParams] = useSearchParams();
@@ -549,9 +572,14 @@ export default function ItemsPage() {
 
         {selected && (
             <ItemModal
+                key={selected.key}
                 itemKey={selected.key}
                 item={selected.item}
+                items={flatItems}
                 onClose={() => setSelected(null)}
+                onSelectItem={(newItem) => {
+                  setSelected(newItem)
+                }}
             />
         )}
       </Layout>

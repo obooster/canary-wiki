@@ -81,7 +81,7 @@
             transparent 9px
     );
     background-size: 200px 200px;
-    animation: mc-glint 8s linear infinite;
+    animation: mc-glint 13s linear infinite;
     mix-blend-mode: screen;
     pointer-events: none;
     opacity: 0.4;
