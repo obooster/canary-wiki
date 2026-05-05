@@ -156,7 +156,7 @@ function RuleSection({ section }) {
   const SectionIcon = section.icon;
 
   return (
-    <div className="bg-[#1E1E1E] border border-[#333]">
+    <div className="bg-[#1E1E1E] rounded-md border border-[#333]">
       <button
         className="w-full flex items-center justify-between px-4 py-4 text-left"
         onClick={() => setExpanded(!expanded)}
@@ -236,7 +236,7 @@ export default function RulesPage() {
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-3 mb-6 p-3 bg-[#1E1E1E] border border-[#333]">
+        <div className="flex flex-wrap gap-3 mb-6 p-3 rounded-md bg-[#1E1E1E] border border-[#333]">
           <p className="text-[#777] text-xs w-full mb-1">Legenda:</p>
           {Object.entries(TYPE_CONFIG).map(([key, cfg]) => {
             const Icon = cfg.icon;

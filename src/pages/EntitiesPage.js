@@ -78,13 +78,13 @@ function EntityCard({ entKey, entity }) {
   return (
     <div
       data-testid={`entity-card-${entKey.toLowerCase()}`}
-      className={`bg-[#1E1E1E] border transition-colors ${isBoss ? 'border-[#FF555533] hover:border-[#FF5555]' : 'border-[#333] hover:border-[#555]'}`}
+      className={`bg-[#1E1E1E] rounded-md border transition-colors ${isBoss ? 'border-[#FF555533] hover:border-[#FF5555]' : 'border-[#333] hover:border-[#555]'}`}
     >
       <div className="p-4">
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="flex items-start rounded-md justify-between gap-3 mb-3">
           <div className="flex items-center gap-3">
-            <div className={`text-2xl w-10 h-10 flex items-center justify-center bg-[#252525] border ${isBoss ? 'border-[#FF5555]' : 'border-[#333]'}`}>
+            <div className={`text-2xl w-10 h-10 flex rounded-md items-center-md justify-center bg-[#252525] border ${isBoss ? 'border-[#FF5555]' : 'border-[#333]'}`}>
               {icon}
             </div>
             <div>
@@ -103,17 +103,17 @@ function EntityCard({ entKey, entity }) {
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-2 mb-3">
-          <div className="flex flex-col items-center bg-[#252525] py-2">
+          <div className="flex flex-col rounded-md items-center bg-[#252525] py-2">
             <Shield size={12} className="text-[#FF5555] mb-1" />
             <p className="text-[#FF5555] font-pixel text-xs">{formatNumber(entity.attributes?.health)}</p>
             <p className="text-[#555] text-[9px]">Vida</p>
           </div>
-          <div className="flex flex-col items-center bg-[#252525] py-2">
+          <div className="flex flex-col rounded-md items-center bg-[#252525] py-2">
             <Swords size={12} className="text-[#FF5555] mb-1" />
             <p className="text-[#FF5555] font-pixel text-xs">{entity.attributes?.damage}</p>
             <p className="text-[#555] text-[9px]">Dano</p>
           </div>
-          <div className="flex flex-col items-center bg-[#252525] py-2">
+          <div className="flex flex-col rounded-md items-center bg-[#252525] py-2">
             <Zap size={12} className="text-[#55FFFF] mb-1" />
             <p className="text-[#55FFFF] font-pixel text-xs">{entity.attributes?.speed}</p>
             <p className="text-[#555] text-[9px]">Veloc.</p>
@@ -121,7 +121,7 @@ function EntityCard({ entKey, entity }) {
         </div>
 
         {/* Rewards */}
-        <div className="space-y-1 border-t border-[#2A2A2A] pt-3">
+        <div className="space-y-1 border-t rounded-md border-[#2A2A2A] pt-3">
           <p className="text-[#777] text-[10px] uppercase tracking-wider mb-1">Recompensas</p>
           <div className="flex flex-wrap gap-3 text-xs">
             <div>
@@ -202,7 +202,7 @@ export default function EntitiesPage() {
         </div>
 
         <div className="flex flex-wrap gap-3 mb-6" data-testid="entity-filters">
-          <div className="flex items-center gap-2 bg-[#1E1E1E] border border-[#333] px-3 py-2 flex-1 min-w-48">
+          <div className="flex items-center rounded-md gap-2 bg-[#1E1E1E] border border-[#333] px-3 py-2 flex-1 min-w-48">
             <Search size={14} className="text-[#777]" />
             <input
               value={search}
@@ -217,7 +217,7 @@ export default function EntitiesPage() {
           <select
             value={typeFilter}
             onChange={e => setTypeFilter(e.target.value)}
-            className="bg-[#1E1E1E] border border-[#333] text-sm px-3 py-2 text-[#AAAAAA] outline-none cursor-pointer hover:border-[#555]"
+            className="bg-[#1E1E1E] border border-[#333] rounded-md text-sm px-3 py-2 text-[#AAAAAA] outline-none cursor-pointer hover:border-[#555]"
             data-testid="entity-filter-type"
           >
             <option value="">Todos os tipos</option>
@@ -227,7 +227,7 @@ export default function EntitiesPage() {
           <button
             onClick={() => setBossOnly(!bossOnly)}
             data-testid="entity-filter-boss"
-            className={`px-3 py-2 text-sm border transition-colors ${bossOnly ? 'bg-[#FF5555] border-[#FF5555] text-black font-bold' : 'bg-[#1E1E1E] border-[#333] text-[#AAAAAA] hover:border-[#555]'}`}
+            className={`px-3 py-2 text-sm border rounded-md transition-colors ${bossOnly ? 'bg-[#FF5555] border-[#FF5555] text-black font-bold' : 'bg-[#1E1E1E] border-[#333] text-[#AAAAAA] hover:border-[#555]'}`}
           >
             Apenas Bosses
           </button>
@@ -258,7 +258,7 @@ export default function EntitiesPage() {
                 <button
                   onClick={() => setPage(p => Math.max(0, p - 1))}
                   disabled={page === 0}
-                  className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+                  className="px-3 py-1 bg-[#1E1E1E] border border-[#333] rounded-md text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
                 >
                   Anterior
                 </button>
@@ -268,7 +268,7 @@ export default function EntitiesPage() {
                 <button
                   onClick={() => setPage(p => p + 1)}
                   disabled={(page + 1) * ITEMS_PER_PAGE >= filtered.length}
-                  className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+                  className="px-3 py-1 bg-[#1E1E1E] border border-[#333] rounded-md text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
                 >
                   Proximo
                 </button>

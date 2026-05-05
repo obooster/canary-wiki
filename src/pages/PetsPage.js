@@ -73,7 +73,7 @@ function PetCard({pet}) {
   }, [expanded]);
 
   return (
-    <div className="bg-[#1E1E1E] border border-[#333] hover:border-[#FF55FF33] transition-colors flex flex-col h-full"
+    <div className="bg-[#1E1E1E] border border-[#333] rounded-md hover:border-[#FF55FF33] transition-colors flex flex-col h-full"
          style={{
            opacity: notObtainable ? 0.6 : 1
          }}>
@@ -91,11 +91,9 @@ function PetCard({pet}) {
               {pet.name}
             </p>
 
-
-
             <div className="flex items-center gap-2 mt-1">
               <span
-                className="text-[10px] px-1.5 py-0.5"
+                className="text-[10px] rounded px-1.5 py-0.5"
                 style={{ color: skill.color, background: `${skill.color}18` }}
               >
                 {skill.label}
@@ -116,7 +114,7 @@ function PetCard({pet}) {
                   <button
                     key={r}
                     onClick={() => setSelectedRarity(r)}
-                    className="w-3.5 h-3.5"
+                    className="w-3.5 h-3.5 rounded-xl"
                     style={{
                       background: c,
                       outline: selectedRarity === r ? `2px solid ${c}` : 'none',

@@ -82,7 +82,7 @@ function CollectionCard({col}) {
   }, [expanded]);
 
   return (
-    <div className="bg-[#1E1E1E] border border-[#333] hover:border-[#55FF5533] transition-colors">
+    <div className="bg-[#1E1E1E] border border-[#333] rounded-md hover:border-[#55FF5533] transition-colors">
       
       {/* HEADER */}
       <button
@@ -135,7 +135,7 @@ function CollectionCard({col}) {
               const rewards = col.rewards?.[lvl.toString()] || [];
 
               return (
-                <div key={lvl} className="border border-[#2A2A2A] p-3">
+                <div key={lvl} className="border rounded-md border-[#2A2A2A] p-3">
 
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
@@ -232,7 +232,7 @@ export default function CollectionsPage() {
         <div className="flex flex-wrap gap-2 mb-6">
           <button
             onClick={() => setActiveCategory(null)}
-            className={`px-3 py-1.5 text-sm border transition-colors ${
+            className={`px-3 py-1.5 text-sm rounded-md border transition-colors ${
               !activeCategory
                 ? 'bg-[#55FF55] border-[#55FF55] text-[#1E1E1E]'
                 : 'bg-[#1E1E1E] border-[#333] text-[#AAA] hover:border-[#55FF55]'
@@ -246,7 +246,7 @@ export default function CollectionsPage() {
               <button
                 key={s}
                 onClick={() => setActiveCategory(activeCategory === s ? null : s)}
-                className={`px-3 py-1.5 text-sm border transition-colors ${
+                className={`px-3 py-1.5 text-sm border rounded-md transition-colors ${
                   activeCategory === s
                     ? 'bg-[#55FF55] border-[#55FF55] text-[#1E1E1E]'
                     : 'bg-[#1E1E1E] border-[#333] text-[#AAA] hover:border-[#55FF55]'
@@ -260,7 +260,7 @@ export default function CollectionsPage() {
         </div>
 
         {/* BUSCA */}
-        <div className="flex items-center gap-2 bg-[#1E1E1E] border border-[#333] px-3 py-2 mb-6">
+        <div className="flex items-center gap-2 bg-[#1E1E1E] rounded-md border border-[#333] px-3 py-2 mb-6">
           <Search size={14} className="text-[#777]" />
 
           <input

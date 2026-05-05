@@ -55,7 +55,7 @@ const EnchantCard = memo(function EnchantCard({ench, enchs}) {
   }, [expanded]);
 
   return (
-    <div className="bg-[#1E1E1E] border border-[#333] hover:border-[#AA00AA55] transition-colors">
+    <div className="bg-[#1E1E1E] border border-[#333] rounded-md hover:border-[#AA00AA55] transition-colors">
 
       {/* HEADER */}
       <button
@@ -250,7 +250,7 @@ export default function EnchantmentsPage() {
         </div>
 
         <div className="flex flex-wrap gap-3 mb-6">
-          <div className="flex items-center gap-2 bg-[#1E1E1E] border border-[#333] px-3 py-2 flex-1">
+          <div className="flex items-center gap-2 bg-[#1E1E1E] rounded-md border border-[#333] px-3 py-2 flex-1">
             <Search size={14} className="text-[#777]" />
             <input
               value={search}
@@ -267,7 +267,7 @@ export default function EnchantmentsPage() {
           <select
             value={targetFilter}
             onChange={e => setTargetFilter(e.target.value)}
-            className="bg-[#1E1E1E] border border-[#333] text-sm px-3 py-2 text-[#AAAAAA]"
+            className="bg-[#1E1E1E] border border-[#333] rounded-md text-sm px-3 py-2 text-[#AAAAAA]"
           >
             <option value="">Todos</option>
             {allTargets.map(t => (
@@ -295,7 +295,7 @@ export default function EnchantmentsPage() {
                 <button
                   onClick={() => setPage(p => Math.max(0, p - 1))}
                   disabled={page === 0}
-                  className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+                  className="px-3 py-1 bg-[#1E1E1E] border border-[#333] rounded-md text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
                 >
                   Anterior
                 </button>
@@ -305,7 +305,7 @@ export default function EnchantmentsPage() {
                 <button
                   onClick={() => setPage(p => p + 1)}
                   disabled={(page + 1) * ITEMS_PER_PAGE >= filtered.length}
-                  className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+                  className="px-3 py-1 bg-[#1E1E1E] border border-[#333] rounded-md text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
                 >
                   Proximo
                 </button>

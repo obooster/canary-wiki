@@ -37,6 +37,36 @@ const CATEGORY_LABELS = {
   OTHER: 'Outro',
 };
 
+function parseObtainDescription(lines = []) {
+  const sections = [];
+  let current = null;
+
+  for (let raw of lines) {
+    const clean = stripMcCodes(raw).trim();
+
+    if (!clean) continue;
+
+    const isHeader = clean.endsWith(':');
+
+    if (isHeader) {
+      current = {
+        title: clean.slice(0, -1), // remove ":"
+        lines: []
+      };
+      sections.push(current);
+    } else {
+      if (!current) {
+        // caso não tenha header nenhum
+        current = { title: null, lines: [] };
+        sections.push(current);
+      }
+      current.lines.push(clean);
+    }
+  }
+
+  return sections;
+}
+
 function RarityBadge({ rarity }) {
   const r = RARITY_COLORS[rarity] || RARITY_COLORS.COMMON;
 
@@ -66,7 +96,7 @@ const ItemCard = ({ itemKey, item, onClick }) => {
       <button
           data-testid={`item-card-${itemKey.toLowerCase()}`}
           onClick={onClick}
-          className="w-full text-left p-3 bg-[#1E1E1E] border border-[#333] hover:border-[#555] hover:bg-[#252525] transition-all duration-150 group"
+          className="w-full text-left rounded-md p-3 bg-[#1E1E1E] border border-[#333] hover:border-[#555] hover:bg-[#252525] transition-all duration-150 group"
           style={{ borderLeftColor: r.hex, borderLeftWidth: 2 }}
       >
         <div className="flex items-start gap-3">
@@ -202,6 +232,7 @@ const ItemModal = ({ itemKey, item, items, onClose, onSelectItem }) => {
   const [tooltip, setTooltip] = useState(null);
 
   const hasRecipe = item.recipe && item.recipe.matrix;
+  const obtainSections = parseObtainDescription(item.obtainDescription)
 
   useEffect(() => {
     requestAnimationFrame(() => setVisible(true));
@@ -232,7 +263,7 @@ const ItemModal = ({ itemKey, item, items, onClose, onSelectItem }) => {
       >
         <div
             onClick={e => e.stopPropagation()}
-            className={`bg-[#1E1E1E] border border-[#333] max-w-md w-full max-h-[80vh] overflow-y-auto transition-all duration-300 ease-out ${
+            className={`bg-[#1E1E1E] rounded-md border border-[#333] max-w-md w-full max-h-[80vh] overflow-y-auto transition-all duration-300 ease-out ${
                 visible ? "scale-100 opacity-100" : "scale-90 opacity-0"
             }`}
             style={{ borderTopColor: r.hex, borderTopWidth: 2 }}
@@ -260,7 +291,7 @@ const ItemModal = ({ itemKey, item, items, onClose, onSelectItem }) => {
 
           {tooltip && createPortal(
               <div
-                  className="font-pixel font-pixel text-[10px] px-2 py-1 border whitespace-nowrap pointer-events-none"
+                  className="font-pixel font-pixel rounded-md text-[10px] px-2 py-1 border whitespace-nowrap pointer-events-none"
                   style={{
                     position: 'fixed',
                     left: tooltip.x,
@@ -315,13 +346,37 @@ const ItemModal = ({ itemKey, item, items, onClose, onSelectItem }) => {
             )}
 
             {item.sell > 0 && (
-                <div className="flex items-center justify-between bg-[#252525] px-3 py-2">
+                <div className="flex items-center rounded-md justify-between bg-[#252525] px-3 py-2">
               <span className="text-[#AAAAAA] text-xs">
                 Preço de Venda
               </span>
                   <span className="text-[#FFAA00] font-pixel text-sm">
                 {formatNumber(item.sell)} moedas
               </span>
+                </div>
+            )}
+
+            {item.obtainDescription && (
+                <div className="space-y-2">
+                  {obtainSections.map((section, index) => (
+                      <div className="bg-[#252525] px-2 py-0.5 rounded-md">
+                        <div key={index} className="mb-1">
+                          {section.title && (
+                              <p className="text-[#777] text-xs uppercase bold font-pixel tracking-wider mb-1">
+                                {section.title}
+                              </p>
+                          )}
+
+                          <div className="">
+                            {section.lines.map((line, j) => (
+                                <div key={j} className="text-xs text-[#AAAAAA]">
+                                  {line}
+                                </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                  ))}
                 </div>
             )}
 
@@ -351,7 +406,7 @@ const ItemModal = ({ itemKey, item, items, onClose, onSelectItem }) => {
             {hasRecipe && (
                 <button
                     onClick={() => setShowRecipe(prev => !prev)}
-                    className="w-full bg-[#252525] border border-[#333] hover:border-[#555] text-[#AAA] text-sm py-2"
+                    className="w-full bg-[#252525] rounded-md border border-[#333] hover:border-[#555] text-[#AAA] text-sm py-2"
                 >
                   {showRecipe ? 'Esconder Receita' : 'Ver Receita'}
                 </button>
@@ -465,7 +520,7 @@ export default function ItemsPage() {
           </div>
 
           <div className="flex flex-wrap gap-3 mb-6" data-testid="items-filters">
-            <div className="flex items-center gap-2 bg-[#1E1E1E] border border-[#333] px-3 py-2 flex-1 min-w-48">
+            <div className="flex items-center gap-2 bg-[#1E1E1E] rounded-md border border-[#333] px-3 py-2 flex-1 min-w-48">
               <Search size={14} className="text-[#777]" />
               <input
                   value={search}
@@ -484,7 +539,7 @@ export default function ItemsPage() {
             <select
                 value={sortBy}
                 onChange={e => setSortBy(e.target.value)}
-                className="bg-[#1E1E1E] border border-[#333] text-sm px-3 py-2 text-[#AAAAAA] outline-none cursor-pointer hover:border-[#555]"
+                className="bg-[#1E1E1E] border border-[#333] rounded-md text-sm px-3 py-2 text-[#AAAAAA] outline-none cursor-pointer hover:border-[#555]"
             >
               <option value="rarity">Raridade</option>
               <option value="price_asc">Preço (menor)</option>
@@ -494,7 +549,7 @@ export default function ItemsPage() {
             <select
                 value={rarityFilter}
                 onChange={e => setRarityFilter(e.target.value)}
-                className="bg-[#1E1E1E] border border-[#333] text-sm px-3 py-2 text-[#AAAAAA] outline-none cursor-pointer hover:border-[#555]"
+                className="bg-[#1E1E1E] border border-[#333] rounded-md text-sm px-3 py-2 text-[#AAAAAA] outline-none cursor-pointer hover:border-[#555]"
                 data-testid="items-filter-rarity"
             >
               <option value="">Todas as raridades</option>
@@ -506,7 +561,7 @@ export default function ItemsPage() {
             <select
                 value={categoryFilter}
                 onChange={e => setCategoryFilter(e.target.value)}
-                className="bg-[#1E1E1E] border border-[#333] text-sm px-3 py-2 text-[#AAAAAA] outline-none cursor-pointer hover:border-[#555]"
+                className="bg-[#1E1E1E] border border-[#333] rounded-md text-sm px-3 py-2 text-[#AAAAAA] outline-none cursor-pointer hover:border-[#555]"
                 data-testid="items-filter-category"
             >
               <option value="">Todas as categorias</option>
@@ -549,7 +604,7 @@ export default function ItemsPage() {
                       <button
                           onClick={() => setPage(p => Math.max(0, p - 1))}
                           disabled={page === 0}
-                          className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+                          className="px-3 py-1 bg-[#1E1E1E] border border-[#333] rounded-md text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
                       >
                         Anterior
                       </button>
@@ -561,7 +616,7 @@ export default function ItemsPage() {
                       <button
                           onClick={() => setPage(p => p + 1)}
                           disabled={(page + 1) * ITEMS_PER_PAGE >= filtered.length}
-                          className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+                          className="px-3 py-1 bg-[#1E1E1E] border border-[#333] rounded-md text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
                       >
                         Proximo
                       </button>

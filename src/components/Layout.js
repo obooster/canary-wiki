@@ -170,7 +170,7 @@ export default function Layout({ children }) {
           </Link>
 
           <form onSubmit={handleSearch} className="hidden lg:flex flex-1 max-w-md">
-            <div className="flex items-center gap-2 bg-[#252525] border border-[#333] hover:border-[#555] focus-within:border-[#FFAA00] px-3 py-2 flex-1 transition-colors">
+            <div className="flex items-center rounded-md gap-2 bg-[#252525] border border-[#333] hover:border-[#555] focus-within:border-[#FFAA00] px-3 py-2 flex-1 transition-colors">
               <Search size={14} className="text-[#777]" />
               <input
                 value={searchQuery}

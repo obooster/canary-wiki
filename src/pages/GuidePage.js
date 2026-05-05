@@ -107,7 +107,7 @@ export default function GuidePage() {
               <Link
                 key={link.to}
                 to={link.to}
-                className="flex flex-col items-center gap-2 p-3 bg-[#1E1E1E] border border-[#333] hover:border-[#555] transition-all text-center group"
+                className="flex flex-col rounded-md items-center gap-2 p-3 bg-[#1E1E1E] border border-[#333] hover:border-[#555] transition-all text-center group"
               >
                 <Icon size={20} style={{ color: link.color }} />
                 <span className="text-xs text-[#AAAAAA] group-hover:text-white transition-colors">
@@ -118,7 +118,7 @@ export default function GuidePage() {
           })}
         </div>
 
-        <div className="space-y-6">
+        <div className="rounded-md space-y-6">
           {STEPS.map((step, idx) => (
             <div key={step.id} className="relative">
               {idx < STEPS.length - 1 && (
@@ -129,11 +129,11 @@ export default function GuidePage() {
               )}
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-[#1E1E1E] border-2 border-[#FFAA00] font-pixel text-[#FFAA00] text-sm z-10">
+                <div className="rounded-full flex-shrink-0 w-10 h-10 flex items-center justify-center bg-[#1E1E1E] border-2 border-[#FFAA00] font-pixel text-[#FFAA00] text-sm z-10">
                   {step.id}
                 </div>
 
-                <div className="flex-1 bg-[#1E1E1E] border border-[#333] p-4 mb-2">
+                <div className="flex-1 rounded-md bg-[#1E1E1E] border border-[#333] p-4 mb-2">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-xl">{step.icon}</span>
                     <h2 className="font-pixel text-white text-sm">
@@ -162,7 +162,7 @@ export default function GuidePage() {
           ))}
         </div>
 
-        <div className="mt-10 bg-[#1E1E1E] border border-[#FFAA00]/30 p-6 text-center">
+        <div className="mt-10 bg-[#1E1E1E] border rounded-md border-[#FFAA00]/30 p-6 text-center">
           <p className="font-pixel text-[#FFAA00] text-lg mb-2">
             Pronto para jogar?
           </p>

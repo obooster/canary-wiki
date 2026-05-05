@@ -120,7 +120,7 @@ export default function HomePage() {
           </div>
 
           <form onSubmit={handleSearch} className="w-full max-w-lg" data-testid="hero-search-form">
-            <div className="flex items-center bg-[#1E1E1E]/90 border-2 border-[#FFAA00]/50 hover:border-[#FFAA00] focus-within:border-[#FFAA00] transition-colors">
+            <div className="flex items-center rounded-md bg-[#1E1E1E]/90 border-2 border-[#FFAA00]/50 hover:border-[#FFAA00] focus-within:border-[#FFAA00] transition-colors">
               <Search size={18} className="ml-4 text-[#FFAA00] flex-shrink-0" />
               <input
                 value={query}
@@ -182,7 +182,7 @@ export default function HomePage() {
                   to={cat.path}
                   data-testid={cat.testId}
                   onMouseEnter={() => cat.preload && preloadData(cat.preload)}
-                  className="group flex items-start gap-4 p-4 bg-[#1E1E1E] border border-[#333] hover:border-[#555] hover:bg-[#252525] transition-all duration-150 relative overflow-hidden"
+                  className="group flex rounded-md items-start gap-4 p-4 bg-[#1E1E1E] border border-[#333] hover:border-[#555] hover:bg-[#252525] transition-all duration-150 relative overflow-hidden"
                 >
                   <div
                     className="flex-shrink-0 p-2.5 transition-colors"

@@ -83,7 +83,7 @@ function ReforgeCard({ refKey, refData }) {
 
   return (
       <div
-          className="bg-[#1E1E1E] border transition-all duration-200"
+          className="bg-[#1E1E1E] border transition-all rounded-md duration-200"
           style={{
             borderColor: `${color}55`,
             boxShadow: `0 0 0 1px ${color}33`,
@@ -91,7 +91,7 @@ function ReforgeCard({ refKey, refData }) {
           }}
       >
         <div
-            className="px-4 py-3 border-b border-[#2A2A2A] flex justify-between items-center"
+            className="px-4 py-3 border-b border-[#2A2A2A] rounded-md flex justify-between items-center"
             style={{ borderTop: `2px solid ${color}` }}
         >
           <div>
@@ -124,7 +124,7 @@ function ReforgeCard({ refKey, refData }) {
                   <button
                       key={r}
                       onClick={() => setRarity(r)}
-                      className="w-4 h-4 transition-all"
+                      className="w-4 h-4 rounded-xl transition-all"
                       style={{
                         background: c?.hex,
                         opacity: rarity === r ? 1 : 0.4,
@@ -212,7 +212,7 @@ export default function ReforgePage() {
         <h1 className="text-2xl text-[#FF5555] font-pixel mb-4">Reforjas</h1>
 
         <div className="flex gap-3 mb-6">
-          <div className="flex items-center gap-2 bg-[#1E1E1E] border border-[#333] px-3 py-2 flex-1">
+          <div className="flex items-center gap-2 bg-[#1E1E1E] rounded-md border border-[#333] px-3 py-2 flex-1">
             <Search size={14} />
             <input
               value={search}
@@ -226,7 +226,7 @@ export default function ReforgePage() {
           <select
             value={catFilter}
             onChange={e => setCatFilter(e.target.value)}
-            className="bg-[#1E1E1E] border border-[#333] px-3 py-2 text-sm"
+            className="bg-[#1E1E1E] border border-[#333] rounded-md px-3 py-2 text-sm"
           >
             <option value="">Todas categorias</option>
             {categories.map(c => (
@@ -252,7 +252,7 @@ export default function ReforgePage() {
             <button
               onClick={() => setPage(p => Math.max(0, p - 1))}
               disabled={page === 0}
-              className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+              className="px-3 py-1 bg-[#1E1E1E] border border-[#333] rounded-md text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
             >
               Anterior
             </button>
@@ -262,7 +262,7 @@ export default function ReforgePage() {
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={(page + 1) * ITEMS_PER_PAGE >= filtered.length}
-              className="px-3 py-1 bg-[#1E1E1E] border border-[#333] text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
+              className="px-3 py-1 bg-[#1E1E1E] border border-[#333] rounded-md text-[#AAA] text-sm disabled:opacity-30 hover:border-[#555]"
             >
               Proximo
             </button>
