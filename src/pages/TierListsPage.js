@@ -90,7 +90,7 @@ function TierRow({ tier, items }) {
           <div
             key={i}
             data-testid={`tier-item-${item.name.toLowerCase().replace(/\s/g, '-')}`}
-            className="flex flex-col bg-[#252525] border border-[#333] px-3 py-1.5 hover:border-[#555] transition-colors"
+            className="flex flex-col bg-[#252525] rounded-md border border-[#333] px-3 py-1.5 hover:border-[#555] transition-colors"
             title={item.note}
           >
             <span className="text-white text-xs font-medium">{item.name}</span>
@@ -109,7 +109,7 @@ function TierListCard({ list }) {
   const grouped = groupByTier(list.items);
 
   return (
-    <div className="bg-[#1E1E1E] border border-[#333]">
+    <div className="bg-[#1E1E1E] rounded-md border border-[#333]">
       <div className="px-4 py-3 border-b border-[#333] flex items-center justify-between">
         <div>
           <p className="font-pixel text-[#FFAA00] text-sm">{list.title}</p>
@@ -152,7 +152,7 @@ export default function TierListsPage() {
               key={list.id}
               onClick={() => setActiveTab(list.id)}
               data-testid={`tierlist-tab-${list.id}`}
-              className={`px-4 py-2 text-sm font-medium transition-colors ${activeTab === list.id
+              className={`px-4 py-2 text-sm rounded-md font-medium transition-colors ${activeTab === list.id
                 ? 'bg-[#FFAA00] text-black font-pixel'
                 : 'bg-[#1E1E1E] border border-[#333] text-[#AAAAAA] hover:border-[#555] hover:text-white'
                 }`}
@@ -162,11 +162,11 @@ export default function TierListsPage() {
           ))}
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-4 p-3 bg-[#1E1E1E] border border-[#333]">
+        <div className="flex flex-wrap gap-2 mb-4 p-3 rounded-md bg-[#1E1E1E] border border-[#333]">
           <span className="text-[#777] text-xs self-center mr-1">Legenda:</span>
           {Object.entries(TIER_COLORS).map(([tier, tc]) => (
             <div key={tier} className="flex items-center gap-1">
-              <div className="w-5 h-5 flex items-center justify-center font-pixel text-xs" style={{ background: tc.bg, color: tc.text }}>
+              <div className="w-5 h-5 flex items-center justify-center rounded-full font-pixel text-xs" style={{ background: tc.bg, color: tc.text }}>
                 {tc.label}
               </div>
               <span className="text-[#777] text-xs">
@@ -178,7 +178,7 @@ export default function TierListsPage() {
 
         {activeList && <TierListCard list={activeList} />}
 
-        <div className="mt-6 p-4 bg-[#1E1E1E] border border-[#FFAA00]/20">
+        <div className="mt-6 p-4 bg-[#1E1E1E] rounded-md border border-[#FFAA00]/20">
           <p className="text-[#777] text-xs">
             <span className="text-[#FFAA00]">Nota:</span> Estas tier lists são baseadas na opinião da comunidade e podem mudar com atualizações do servidor.
             Para sugerir mudanças, acesse o Discord da RedeCanary.

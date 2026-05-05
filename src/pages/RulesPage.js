@@ -180,8 +180,9 @@ function RuleSection({ section }) {
         )}
       </button>
 
-      {expanded && (
-        <div className="border-t border-[#2A2A2A] divide-y divide-[#2A2A2A]">
+        <div
+            className={`border-t border-[#2A2A2A] divide-y divide-[#2A2A2A] overflow-hidden transition-all duration-300 ${
+              expanded ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
           {section.rules.map((rule, i) => {
             const tc = TYPE_CONFIG[rule.type] || TYPE_CONFIG.info;
             const Icon = tc.icon;
@@ -214,7 +215,6 @@ function RuleSection({ section }) {
             );
           })}
         </div>
-      )}
     </div>
   );
 }
