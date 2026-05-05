@@ -91,3 +91,14 @@
     0%   { background-position: 0 0; }
     100% { background-position: 200px 200px; }
 }
+
+.mc-frame {
+    height: 64px;
+    width: 64px;
+    aspect-ratio: 1;
+
+    object-fit: cover;
+    object-position: top;
+
+    image-rendering: pixelated;
+}

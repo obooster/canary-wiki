@@ -72,7 +72,7 @@ const ItemCard = ({ itemKey, item, onClick }) => {
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-[#252525] border border-[#333]">
             {!imgError ? (
-                <img src={texture.url} onError={() => setImgError(true)} loading="lazy" className="w-8 h-8 [image-rendering:pixelated]" alt=""/>
+                <img src={texture.url} onError={() => setImgError(true)} loading="lazy" className="mc-frame" style={{width: 30, height: 30}} alt="" />
             ) : (<Package size={20} style={{ color: r.hex }} />)}
           </div>
 
@@ -162,7 +162,8 @@ const RecipeSlot = ({ slot, setTooltip, onClick }) => {
         <img
           src={imgSrc}
           alt=""
-          className="w-8 h-8 [image-rendering:pixelated] relative z-10"
+          className="mc-frame relative z-10"
+          style={{width: 32, height: 32}}
           onError={handleImageError}
         />
       ) : (

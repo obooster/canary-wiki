@@ -444,7 +444,10 @@ export function getTextureWithFallback(id, meta = 0, displayName) {
   let fallback = mc.success ? mc.url : null;
 
   if (displayName) {
-    const cleanName = NORMALIZE_FOR_COMPARE(displayName);
+    let cleanName = NORMALIZE_FOR_COMPARE(displayName);
+
+    if (cleanName.startsWith("livro-de")) cleanName = cleanName.replace(/-[ivxlcdm]+$/i, '')
+
     primary = JULIA_TEXTURE_PATH + cleanName + '.png';
   }
 
