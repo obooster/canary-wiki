@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/canary-wiki/static/css/main.a7904396.css",
-    "main.js": "/canary-wiki/static/js/main.39d93651.js",
+    "main.css": "/canary-wiki/static/css/main.22dc7fef.css",
+    "main.js": "/canary-wiki/static/js/main.22bc6f21.js",
     "static/js/490.0b226e2c.chunk.js": "/canary-wiki/static/js/490.0b226e2c.chunk.js",
     "static/js/504.db68f3d7.chunk.js": "/canary-wiki/static/js/504.db68f3d7.chunk.js",
     "static/js/234.fe2cbb55.chunk.js": "/canary-wiki/static/js/234.fe2cbb55.chunk.js",
@@ -10,8 +10,8 @@
     "static/js/482.9149aac6.chunk.js": "/canary-wiki/static/js/482.9149aac6.chunk.js",
     "static/js/58.0aa5f4fc.chunk.js": "/canary-wiki/static/js/58.0aa5f4fc.chunk.js",
     "static/js/620.0b8eeebb.chunk.js": "/canary-wiki/static/js/620.0b8eeebb.chunk.js",
-    "static/js/543.86148c23.chunk.js": "/canary-wiki/static/js/543.86148c23.chunk.js",
-    "static/js/965.9dfd341f.chunk.js": "/canary-wiki/static/js/965.9dfd341f.chunk.js",
+    "static/js/543.dc60d928.chunk.js": "/canary-wiki/static/js/543.dc60d928.chunk.js",
+    "static/js/965.41abc748.chunk.js": "/canary-wiki/static/js/965.41abc748.chunk.js",
     "static/js/370.5515e6e6.chunk.js": "/canary-wiki/static/js/370.5515e6e6.chunk.js",
     "static/js/514.7a850d5b.chunk.js": "/canary-wiki/static/js/514.7a850d5b.chunk.js",
     "static/js/209.07fc8ebf.chunk.js": "/canary-wiki/static/js/209.07fc8ebf.chunk.js",
@@ -19,8 +19,8 @@
     "static/media/background.png": "/canary-wiki/static/media/background.4d366a4093e384102fac.png",
     "static/media/icon.png": "/canary-wiki/static/media/icon.7498a17c82d1f4947fd9.png",
     "index.html": "/canary-wiki/index.html",
-    "main.a7904396.css.map": "/canary-wiki/static/css/main.a7904396.css.map",
-    "main.39d93651.js.map": "/canary-wiki/static/js/main.39d93651.js.map",
+    "main.22dc7fef.css.map": "/canary-wiki/static/css/main.22dc7fef.css.map",
+    "main.22bc6f21.js.map": "/canary-wiki/static/js/main.22bc6f21.js.map",
     "490.0b226e2c.chunk.js.map": "/canary-wiki/static/js/490.0b226e2c.chunk.js.map",
     "504.db68f3d7.chunk.js.map": "/canary-wiki/static/js/504.db68f3d7.chunk.js.map",
     "234.fe2cbb55.chunk.js.map": "/canary-wiki/static/js/234.fe2cbb55.chunk.js.map",
@@ -29,15 +29,15 @@
     "482.9149aac6.chunk.js.map": "/canary-wiki/static/js/482.9149aac6.chunk.js.map",
     "58.0aa5f4fc.chunk.js.map": "/canary-wiki/static/js/58.0aa5f4fc.chunk.js.map",
     "620.0b8eeebb.chunk.js.map": "/canary-wiki/static/js/620.0b8eeebb.chunk.js.map",
-    "543.86148c23.chunk.js.map": "/canary-wiki/static/js/543.86148c23.chunk.js.map",
-    "965.9dfd341f.chunk.js.map": "/canary-wiki/static/js/965.9dfd341f.chunk.js.map",
+    "543.dc60d928.chunk.js.map": "/canary-wiki/static/js/543.dc60d928.chunk.js.map",
+    "965.41abc748.chunk.js.map": "/canary-wiki/static/js/965.41abc748.chunk.js.map",
     "370.5515e6e6.chunk.js.map": "/canary-wiki/static/js/370.5515e6e6.chunk.js.map",
     "514.7a850d5b.chunk.js.map": "/canary-wiki/static/js/514.7a850d5b.chunk.js.map",
     "209.07fc8ebf.chunk.js.map": "/canary-wiki/static/js/209.07fc8ebf.chunk.js.map",
     "699.fb2945d7.chunk.js.map": "/canary-wiki/static/js/699.fb2945d7.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a7904396.css",
-    "static/js/main.39d93651.js"
+    "static/css/main.22dc7fef.css",
+    "static/js/main.22bc6f21.js"
   ]
 }
