@@ -16,7 +16,8 @@ export const ATTR_LABELS = {
   MINING_FORTUNE: { label: 'Fortuna', color: '#71ff83' },
   SWING_RANGE: { label: 'Alcance de ataque', color: '#FF5555'},
   FISHING_SPEED: { label: 'Velocidade de Pesca', color: '#80eeff'},
-  FISHING_FORTUNE: { label: 'Fortuna de Pesca', color: '#80eeff'}
+  FISHING_FORTUNE: { label: 'Fortuna de Pesca', color: '#80eeff'},
+  PRESSURE_RESISTANCE: { label: 'Resistência a Pressão', color: '#e07bff' },
 };
 
 export const SKILL_LABELS = {
